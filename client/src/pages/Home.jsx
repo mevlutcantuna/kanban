@@ -1,5 +1,12 @@
+import Header from "../components/Header";
+
 const Home = () => {
-  return <div>Home</div>;
+  return (
+    <div className="w-screen h-screen bg-lightBlack">
+      <Header />
+      App
+    </div>
+  );
 };
 
 export default Home;
