@@ -1,50 +1,68 @@
 export const columns = [
   {
-    id: "col-1",
+    _id: "col-1",
     name: "To Do",
-    todos: [1, 3],
+    tasks: [1, 3],
+    user: "userid",
+    v: 0,
   },
   {
-    id: "col-2",
+    _id: "col-2",
     name: "Doing",
-    todos: [2, 4],
+    tasks: [2, 4],
+    user: "userid",
+    v: 0,
   },
   {
-    id: "col-3",
+    _id: "col-3",
     name: "Done",
-    todos: [5, 6],
+    tasks: [5, 6],
+    user: "userid",
+    v: 0,
   },
 ];
 
-export const todos = [
+export const tasks = [
   {
-    id: 1,
+    _id: 1,
     name: "Çöpleri At.",
     tag: "home",
+    user: "userid",
+    v: 0,
   },
   {
-    id: 2,
+    _id: 2,
     name: "React Çalış.",
     tag: "work",
+    user: "userid",
+    v: 0,
   },
   {
-    id: 3,
+    _id: 3,
     name: "Legoları Kur.",
     tag: "home",
+    user: "userid",
+    v: 0,
   },
   {
-    id: 4,
+    _id: 4,
     name: "Typescript makalesi yaz.",
     tag: "work",
+    user: "userid",
+    v: 0,
   },
   {
-    id: 5,
+    _id: 5,
     name: "Bilgisayara oyunu indir.",
     tag: "personal",
+    user: "userid",
+    v: 0,
   },
   {
-    id: 6,
+    _id: 6,
     name: "Telefonun içindeki boş şeyleri sil.",
     tag: "personal",
+    user: "userid",
+    v: 0,
   },
 ];

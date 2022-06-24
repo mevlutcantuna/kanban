@@ -2,31 +2,30 @@
 import { useEffect, useState, memo } from "react";
 import ColumnItem from "./ColumnItem";
 
-import { todos } from "../mock-data";
+import { tasks } from "../mock-data";
 
 
-const Column = (props: any) => {
-    const [columnsTodos, setColumnsTodos] = useState<any>([]);
-    const getColumnTodos = (id: any) => {
-        const filteredTodos = todos?.filter(
-            (item: any) => props.item?.todos.includes(item.id)
+const Column = ({ item, allColumns, innerRef }: any) => {
+    const [columnTasks, setColumnTasks] = useState<any>([]);
+
+    const getColumnTodos = () => {
+        const filteredTasks = tasks?.filter(
+            (i: any) => item.tasks.includes(i._id)
         );
-        setColumnsTodos(filteredTodos);
-    };
+        setColumnTasks(filteredTasks);
+    }
 
     useEffect(() => {
-        getColumnTodos(props.item.id);
+        getColumnTodos();
     }, []);
 
-    //console.log(columnsTodos)
-
     return (
-        <div ref={props.innerRef} className="text-white w-72 bg-slate-400 p-2">
-            <h1 className="mb-2">{props.item.name}</h1>
-            {columnsTodos.map((item: any, index: any) => (
+        <div ref={innerRef} className="text-white w-72 bg-slate-400 p-2">
+            <h1 className="mb-2">{item.name}</h1>
+            {columnTasks.map((item: any, index: any) => (
                 <ColumnItem
                     item={item}
-                    key={item.id}
+                    key={item._id}
                     index={index}
                 />
             ))}

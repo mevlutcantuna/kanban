@@ -3,8 +3,8 @@ export const reorderColumn = (
   startIndex: any,
   endIndex: any
 ) => {
-  const [removed] = sourceCol.todos.splice(startIndex, 1);
-  sourceCol.todos.splice(endIndex, 0, removed);
+  const [removed] = sourceCol.tasks.splice(startIndex, 1);
+  sourceCol.tasks.splice(endIndex, 0, removed);
 
-  return sourceCol.todos;
+  return sourceCol.tasks;
 };

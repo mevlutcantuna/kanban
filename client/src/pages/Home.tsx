@@ -14,47 +14,43 @@ const Home = () => {
     // if user drops todo to unknown destination
     if (!destination) return;
 
-    // if user drags and drops back same destination 
+    // if user drags and drops back same destination
     if (
       source.index === destination.index &&
       source.droppableId === destination.droppableId
-    ) return;
+    )
+      return;
 
     // get columns infos
     let sourceCol: any;
     let destinationCol: any;
 
     for (let i = 0; i < columns.length; i++) {
-      if (columns[i].id === source.droppableId) {
-        sourceCol = columns[i]
+      if (columns[i]._id === source.droppableId) {
+        sourceCol = columns[i];
       }
-      if (columns[i].id === destination.droppableId) {
-        destinationCol = columns[i]
+      if (columns[i]._id === destination.droppableId) {
+        destinationCol = columns[i];
       }
     }
 
     // if user drops within the same column but in a different position
 
     if (sourceCol.id === destinationCol.id) {
-      const newColumnsTodosList = reorderColumn(
+      const newColumnsTasksList = reorderColumn(
         sourceCol,
         source.index,
         destination.index
-      )
+      );
 
       const newAllColumns = allColumns.map((item: any) => {
         if (item.id === sourceCol.id) {
-          return { ...item, todos: newColumnsTodosList }
+          return { ...item, tasks: newColumnsTasksList };
         } else return item;
-      })
+      });
 
-      // console.log('worked', newAllColumns)
-
-      setAllColumns(newAllColumns)
+      setAllColumns(newAllColumns);
     }
-
-    //console.log('source', sourceCol, 'des', destinationCol)
-
   };
 
   return (
@@ -63,8 +59,8 @@ const Home = () => {
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex justify-between max-w-[1000px] m-auto mt-10">
           {allColumns.map((item: any) => (
-            <div key={item.id}>
-              <Droppable droppableId={`${item.id}`}>
+            <div key={item._id}>
+              <Droppable droppableId={`${item._id}`}>
                 {(provided: any) => (
                   <div>
                     <Column
