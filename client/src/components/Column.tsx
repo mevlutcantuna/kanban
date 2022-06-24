@@ -1,15 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { todos } from "../mock-data";
 import ColumnItem from "./ColumnItem";
 
 
 const Column = (props: any) => {
     const [columnsTodos, setColumnsTodos] = useState<any>([]);
 
+    console.log()
+
     const getColumnTodos = (id: any) => {
         const filteredTodos = props.allTodos.filter(
-            (item: any) => item.column_id === id
+            (item: any) => props.item.todos.includes(item.id)
         );
         setColumnsTodos(filteredTodos);
     };

@@ -3,7 +3,7 @@ import { Draggable } from "react-beautiful-dnd";
 const ColumnItem = (props: any) => {
     return (
         <div >
-            <Draggable draggableId={props.item.id} index={props.index}>
+            <Draggable draggableId={`${props.item.id}`} index={props.index}>
                 {(provided) => (
                     <div
                         className="bg-red-50 p-1 text-black mb-2 cursor-pointer"

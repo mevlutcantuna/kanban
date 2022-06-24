@@ -4,14 +4,24 @@ import { colums, todos } from "../mock-data";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useState } from "react";
 
-
 const Home = () => {
-  const [allTodos, setAllTodos] = useState<any>([...todos])
+  const [allTodos, setAllTodos] = useState<any>([...todos]);
 
   const onDragEnd = (result: any) => {
-    if (!result.destination) return;
-    console.log(result)
-  }
+    const { destination, source } = result;
+
+    if (!destination) return;
+
+    // todo place doesn't change
+    if (
+      source.index === destination.index &&
+      source.droppableId === destination.droppableId
+    ) return;
+
+    console.log(result);
+
+
+  };
 
   return (
     <div className="w-screen h-screen bg-lightBlack">
@@ -20,7 +30,7 @@ const Home = () => {
         <div className="flex justify-between max-w-[1000px] m-auto mt-10">
           {colums.map((item: any) => (
             <div key={item.id}>
-              <Droppable droppableId={item.id}>
+              <Droppable droppableId={`${item.id}`}>
                 {(provided: any) => (
                   <div>
                     <Column
@@ -32,11 +42,9 @@ const Home = () => {
                     />
                     {provided.placeholder}
                   </div>
-                )
-                }
+                )}
               </Droppable>
             </div>
-
           ))}
         </div>
       </DragDropContext>
