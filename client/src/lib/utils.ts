@@ -1,1 +1,5 @@
-export const reorder = () => {};
+export const reorderColumn = (
+  sourceCol: any,
+  startIndex: any,
+  endIndex: any
+) => {};
