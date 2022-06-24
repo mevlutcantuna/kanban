@@ -1,16 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import ColumnItem from "./ColumnItem";
+
+import { todos } from "../mock-data";
 
 
 const Column = (props: any) => {
     const [columnsTodos, setColumnsTodos] = useState<any>([]);
-
-    console.log()
-
     const getColumnTodos = (id: any) => {
-        const filteredTodos = props.allTodos.filter(
-            (item: any) => props.item.todos.includes(item.id)
+        const filteredTodos = todos?.filter(
+            (item: any) => props.item?.todos.includes(item.id)
         );
         setColumnsTodos(filteredTodos);
     };
@@ -18,6 +17,8 @@ const Column = (props: any) => {
     useEffect(() => {
         getColumnTodos(props.item.id);
     }, []);
+
+    //console.log(columnsTodos)
 
     return (
         <div ref={props.innerRef} className="text-white w-72 bg-slate-400 p-2">
@@ -33,4 +34,4 @@ const Column = (props: any) => {
     );
 };
 
-export default Column;
+export default memo(Column);
