@@ -1,12 +1,17 @@
 import Column from "../components/Column";
 import Header from "../components/Header";
-import { colums } from "../mock-data";
+import { colums, todos } from "../mock-data";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { useState } from "react";
+
 
 const Home = () => {
+  const [allTodos, setAllTodos] = useState<any>([...todos])
+
   const onDragEnd = (result: any) => {
+    if (!result.destination) return;
     console.log(result)
-  };
+  }
 
   return (
     <div className="w-screen h-screen bg-lightBlack">
@@ -19,6 +24,7 @@ const Home = () => {
                 {(provided: any) => (
                   <div>
                     <Column
+                      allTodos={allTodos}
                       {...provided.droppableProps}
                       innerRef={provided.innerRef}
                       item={item}

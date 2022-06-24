@@ -7,15 +7,15 @@ import ColumnItem from "./ColumnItem";
 const Column = (props: any) => {
     const [columnsTodos, setColumnsTodos] = useState<any>([]);
 
-    const getColumnTodos = () => {
-        const filteredTodos = todos.filter(
-            (item: any) => item.column_id === props.item.id
+    const getColumnTodos = (id: any) => {
+        const filteredTodos = props.allTodos.filter(
+            (item: any) => item.column_id === id
         );
         setColumnsTodos(filteredTodos);
     };
 
     useEffect(() => {
-        getColumnTodos();
+        getColumnTodos(props.item.id);
     }, []);
 
     return (
