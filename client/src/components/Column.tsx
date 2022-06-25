@@ -1,19 +1,31 @@
-import React from "react";
+
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import ColumnItem from "./ColumnItem";
 
 const Column = ({ column, tasks }: any) => {
     return (
-        <div className="w-full bg-red-50 mx-2 p-2">
+        <div className="w-full bg-[#202020] mx-2 p-6 rounded-md">
+            <h1 className="text-white text-xl">{column.title}</h1>
             <Droppable droppableId={column.id}>
                 {(provided: any) => {
                     return (
-                        <div ref={provided.innerRef} {...provided.droppableProps}>
-                            <h1 className="mb-4">{column.title}</h1>
+                        <div
+                            className="w-full h-full"
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                        >
                             {tasks.map((task: any, index: number) => (
                                 <Draggable draggableId={task.id} key={task.id} index={index}>
                                     {(provided) => {
-                                        return <ColumnItem innerRef={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} key={task.id} task={task} />;
+                                        return (
+                                            <ColumnItem
+                                                innerRef={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                                key={task.id}
+                                                task={task}
+                                            />
+                                        );
                                     }}
                                 </Draggable>
                             ))}
@@ -22,7 +34,7 @@ const Column = ({ column, tasks }: any) => {
                     );
                 }}
             </Droppable>
-        </div>
+        </div >
     );
 };
 

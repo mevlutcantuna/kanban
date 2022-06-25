@@ -1,11 +1,41 @@
-import React from 'react'
+import React, { useState } from "react";
+
+import UpdateIcon from "../assets/UpdateIcon";
+import { Button, Popover } from "antd";
+import ButtonContent from "./ButtonContent";
 
 const ColumnItem = ({ task, innerRef, ...props }: any) => {
-    return (
-        <div ref={innerRef} {...props} className="mb-2 bg-gray-300 p-2" >
-            {task.content}
-        </div>
-    )
-}
+    const [visible, setVisible] = useState<boolean>(false);
 
-export default ColumnItem
+    const hide = () => {
+        setVisible(false);
+    };
+
+    const handleVisibleChange = (newVisible: boolean) => {
+        setVisible(newVisible);
+    };
+
+    return (
+        <div ref={innerRef} {...props} className="mb-3 bg-gray-300 p-2 rounded-sm">
+            <div className="mb-2 text-base">{task.content}</div>
+            <div className="flex items-center justify-between">
+                <span className="text-xs px-2 py-1 rounded-md bg-gray-700 text-white">
+                    {task.tag}
+                </span>
+                <Popover
+                    visible={visible}
+                    onVisibleChange={handleVisibleChange}
+                    content={<ButtonContent hide={hide} />}
+                    placement="bottom"
+                    trigger="click"
+                >
+                    <Button type="text">
+                        <UpdateIcon color="black" />
+                    </Button>
+                </Popover>
+            </div>
+        </div>
+    );
+};
+
+export default ColumnItem;

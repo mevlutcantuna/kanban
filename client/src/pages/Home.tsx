@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import Column from "../components/Column";
+import CreateButtons from "../components/CreateButtons";
 import Header from "../components/Header";
 import { reorderColumn } from "../lib/utils";
 
@@ -49,11 +50,39 @@ const Home = () => {
     }
 
     // if user drops in a different colums
+    const startTaskIds = Array.from(sourceCol.taskIds);
+    const [removed] = startTaskIds.splice(source.index, 1);
+
+    const newStartCol = {
+      ...sourceCol,
+      taskIds: startTaskIds,
+    };
+
+    const endTaskIds = Array.from(destinationCol.taskIds);
+    endTaskIds.splice(destination.index, 0, removed);
+    const newEndCol = {
+      ...destinationCol,
+      taskIds: endTaskIds,
+    };
+
+    const newState = {
+      ...state,
+      columns: {
+        ...state.columns,
+        [newStartCol.id]: newStartCol,
+        [newEndCol.id]: newEndCol,
+      },
+    };
+
+    setState(newState);
   };
 
   return (
     <div className="w-screen h-screen bg-lightBlack">
       <Header />
+      <div className="flex justify-end w-full max-w-[1000px] m-auto mt-8 px-2">
+        <CreateButtons />
+      </div>
       <DragDropContext onDragEnd={onEndDrag}>
         <div className="flex justify-between w-full max-w-[1000px] m-auto mt-4">
           {Object.entries(state.columns).map(([columnId, column]: any) => {
