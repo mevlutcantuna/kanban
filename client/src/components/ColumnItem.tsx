@@ -1,22 +1,11 @@
-import { Draggable } from "react-beautiful-dnd";
+import React from 'react'
 
-const ColumnItem = (props: any) => {
+const ColumnItem = ({ task, innerRef, ...props }: any) => {
     return (
-        <div >
-            <Draggable draggableId={`${props.item._id}`} index={props.index}>
-                {(provided) => (
-                    <div
-                        className="bg-red-50 p-1 text-black mb-2 cursor-pointer"
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        ref={provided.innerRef}
-                    >
-                        {props.item.name}
-                    </div>
-                )}
-            </Draggable>
+        <div ref={innerRef} {...props} className="mb-2 bg-gray-300 p-2" >
+            {task.content}
         </div>
-    );
-};
+    )
+}
 
-export default ColumnItem;
+export default ColumnItem

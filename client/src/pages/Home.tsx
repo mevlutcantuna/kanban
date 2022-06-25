@@ -1,81 +1,67 @@
+import { useState } from "react";
+import { DragDropContext } from "react-beautiful-dnd";
 import Column from "../components/Column";
 import Header from "../components/Header";
-import { columns } from "../mock-data";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { useState } from "react";
 import { reorderColumn } from "../lib/utils";
 
+import { initialData } from "../mock-data";
+
 const Home = () => {
-  const [allColumns, setAllColumns] = useState<any>([...columns]);
+  const [state, setState] = useState<any>(initialData);
+  //console.log(Object.entries(state.columns))
 
-  const onDragEnd = (result: any) => {
-    const { destination, source } = result;
+  const onEndDrag = (result: any) => {
+    const { source, destination } = result;
 
-    // if user drops todo to unknown destination
+    // if user drops in an unknown place
     if (!destination) return;
 
-    // if user drags and drops back same destination
+    // if user drags and drops in the same position
     if (
-      source.index === destination.index &&
-      source.droppableId === destination.droppableId
-    )
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
       return;
-
-    // get columns infos
-    let sourceCol: any;
-    let destinationCol: any;
-
-    for (let i = 0; i < columns.length; i++) {
-      if (columns[i]._id === source.droppableId) {
-        sourceCol = columns[i];
-      }
-      if (columns[i]._id === destination.droppableId) {
-        destinationCol = columns[i];
-      }
     }
 
-    // if user drops within the same column but in a different position
+    // get colums infos of source and destination
+    const sourceCol = state.columns[source.droppableId];
+    const destinationCol = state.columns[destination.droppableId];
+    // if user drops within the same columns, but in a different position
 
     if (sourceCol.id === destinationCol.id) {
-      const newColumnsTasksList = reorderColumn(
+      const newColumn = reorderColumn(
         sourceCol,
         source.index,
         destination.index
       );
 
-      const newAllColumns = allColumns.map((item: any) => {
-        if (item.id === sourceCol.id) {
-          return { ...item, tasks: newColumnsTasksList };
-        } else return item;
-      });
+      const newState = {
+        ...state,
+        columns: {
+          ...state.columns,
+          [newColumn.id]: newColumn,
+        },
+      };
 
-      setAllColumns(newAllColumns);
+      setState(newState);
+      return;
     }
+
+    // if user drops in a different colums
   };
 
   return (
     <div className="w-screen h-screen bg-lightBlack">
       <Header />
-      <DragDropContext onDragEnd={onDragEnd}>
-        <div className="flex justify-between max-w-[1000px] m-auto mt-10">
-          {allColumns.map((item: any) => (
-            <div key={item._id}>
-              <Droppable droppableId={`${item._id}`}>
-                {(provided: any) => (
-                  <div>
-                    <Column
-                      allColumns={allColumns}
-                      {...provided.droppableProps}
-                      innerRef={provided.innerRef}
-                      item={item}
-                      key={item.id}
-                    />
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            </div>
-          ))}
+      <DragDropContext onDragEnd={onEndDrag}>
+        <div className="flex justify-between w-full max-w-[1000px] m-auto mt-4">
+          {Object.entries(state.columns).map(([columnId, column]: any) => {
+            const tasks = column.taskIds.map(
+              (taskId: any) => state.tasks[taskId]
+            );
+            return <Column key={columnId} column={column} tasks={tasks} />;
+          })}
         </div>
       </DragDropContext>
     </div>

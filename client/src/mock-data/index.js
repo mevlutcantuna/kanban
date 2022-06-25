@@ -1,68 +1,25 @@
-export const columns = [
-  {
-    _id: "col-1",
-    name: "To Do",
-    tasks: [1, 3],
-    user: "userid",
-    v: 0,
+export const initialData = {
+  tasks: {
+    "task-1": { id: "task-1", content: "Take out the garbage" },
+    "task-2": { id: "task-2", content: "Watch my favorite show" },
+    "task-3": { id: "task-3", content: "Charge my phone" },
+    "task-4": { id: "task-4", content: "Cook dinner" },
   },
-  {
-    _id: "col-2",
-    name: "Doing",
-    tasks: [2, 4],
-    user: "userid",
-    v: 0,
+  columns: {
+    "column-1": {
+      id: "column-1",
+      title: "To do",
+      taskIds: ["task-1", "task-2", "task-3"],
+    },
+    "column-2": {
+      id: "column-2",
+      title: "In progress",
+      taskIds: ["task-4"],
+    },
+    "column-3": {
+      id: "column-3",
+      title: "Done",
+      taskIds: [],
+    },
   },
-  {
-    _id: "col-3",
-    name: "Done",
-    tasks: [5, 6],
-    user: "userid",
-    v: 0,
-  },
-];
-
-export const tasks = [
-  {
-    _id: 1,
-    name: "Çöpleri At.",
-    tag: "home",
-    user: "userid",
-    v: 0,
-  },
-  {
-    _id: 2,
-    name: "React Çalış.",
-    tag: "work",
-    user: "userid",
-    v: 0,
-  },
-  {
-    _id: 3,
-    name: "Legoları Kur.",
-    tag: "home",
-    user: "userid",
-    v: 0,
-  },
-  {
-    _id: 4,
-    name: "Typescript makalesi yaz.",
-    tag: "work",
-    user: "userid",
-    v: 0,
-  },
-  {
-    _id: 5,
-    name: "Bilgisayara oyunu indir.",
-    tag: "personal",
-    user: "userid",
-    v: 0,
-  },
-  {
-    _id: 6,
-    name: "Telefonun içindeki boş şeyleri sil.",
-    tag: "personal",
-    user: "userid",
-    v: 0,
-  },
-];
+};
