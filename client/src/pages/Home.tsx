@@ -46,6 +46,9 @@ const Home = () => {
       };
 
       setState(newState);
+      // update the DB
+
+
       return;
     }
 
@@ -75,6 +78,9 @@ const Home = () => {
     };
 
     setState(newState);
+
+    // update the DB
+
   };
 
   return (
