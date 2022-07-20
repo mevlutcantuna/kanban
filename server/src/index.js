@@ -1,6 +1,23 @@
-import dotenv from "dotenv";
+const { ApolloServer } = require("apollo-server-express");
+const { ApolloServerPluginDrainHttpServer } = require("apollo-server-core");
+const express = require("express");
+const resolvers = require("./resolvers");
+const typeDefs = require("./typeDefs");
+const http = require("http");
 
-// to get some variables from .env file
-dotenv.config();
+const startServer = async () => {
+  const app = express();
+  const httpServer = http.createServer(app);
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    cache: "bounded",
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+  });
+  await server.start();
+  server.applyMiddleware({ app });
+  await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
+  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+};
 
-console.log(process.env.MONGO_DB_URL);
+startServer();
