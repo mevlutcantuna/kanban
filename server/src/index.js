@@ -2,7 +2,8 @@ const { ApolloServer } = require("apollo-server-express");
 const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
-const typeDefs = require("./typeDefs");
+
+const typeDefs = require("./schema");
 const resolvers = require("./resolvers");
 
 const startServer = async () => {
@@ -29,7 +30,7 @@ const startServer = async () => {
         )
       );
     })
-    .catch((err) => console.log("erre", err));
+    .catch((err) => console.log("error", err));
 };
 
 startServer();
