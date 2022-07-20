@@ -1,23 +1,35 @@
 const { ApolloServer } = require("apollo-server-express");
-const { ApolloServerPluginDrainHttpServer } = require("apollo-server-core");
 const express = require("express");
-const resolvers = require("./resolvers");
+const mongoose = require("mongoose");
+require("dotenv").config();
 const typeDefs = require("./typeDefs");
-const http = require("http");
+const resolvers = require("./resolvers");
 
 const startServer = async () => {
   const app = express();
-  const httpServer = http.createServer(app);
+  const PORT = process.env.PORT || 8080;
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    cache: "bounded",
-    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   });
+
   await server.start();
   server.applyMiddleware({ app });
-  await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+
+  await mongoose
+    .connect(process.env.MONGO_DB_URL, {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+    })
+
+    .then(() => {
+      app.listen(PORT, () =>
+        console.log(
+          `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
+        )
+      );
+    })
+    .catch((err) => console.log("erre", err));
 };
 
 startServer();
