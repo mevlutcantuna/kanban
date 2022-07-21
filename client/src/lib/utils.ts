@@ -24,3 +24,9 @@ export const successMessage = (msg: String) => {
 export const errorMessage = (msg: String) => {
   return message.error(msg);
 };
+
+export const isAuthanticated = () => {
+  const token = localStorage.getItem("token");
+  if (token) return true;
+  else return false;
+};

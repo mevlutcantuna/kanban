@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { REGISTER } from "../graphql/auth";
-import { errorMessage, successMessage } from "../lib/utils";
+import { errorMessage, isAuthanticated, successMessage } from "../lib/utils";
 import { Spin } from "antd";
 
 const Signup = () => {
@@ -13,15 +13,7 @@ const Signup = () => {
     setInputs({ ...inputs, [e.target.name]: e.target.value })
   }
 
-  const [register, { loading, error }] = useMutation(REGISTER, {
-    variables: {
-      "user": {
-        "fullName": inputs.fullName,
-        "email": inputs.email,
-        "password": inputs.password
-      }
-    }
-  })
+  const [register, { loading, error }] = useMutation(REGISTER)
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -30,7 +22,15 @@ const Signup = () => {
       return alert('Please fill in all fields');
     }
 
-    await register()
+    await register({
+      variables: {
+        "user": {
+          "fullName": inputs.fullName,
+          "email": inputs.email,
+          "password": inputs.password
+        }
+      }
+    })
 
     successMessage('Register is successed...')
     return navigate('/login')
@@ -40,7 +40,11 @@ const Signup = () => {
     if (error) {
       errorMessage(error.message)
     }
-  }, [error])
+
+    if (isAuthanticated()) {
+      navigate("/", { replace: true });
+    }
+  }, [error, navigate])
 
   return (
     <Spin spinning={loading} >

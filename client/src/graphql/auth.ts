@@ -12,4 +12,25 @@ const REGISTER = gql`
   }
 `;
 
-export { REGISTER };
+const LOGIN = gql`
+  mutation login($user: LoginInput) {
+    login(user: $user) {
+      fullName
+      password
+      email
+      token
+      id
+    }
+  }
+`;
+
+const GET_USER = gql`
+  query getUser($token: String) {
+    getUser(token: $token) {
+      fullName
+      token
+    }
+  }
+`;
+
+export { REGISTER, LOGIN, GET_USER };
