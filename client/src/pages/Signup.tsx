@@ -18,6 +18,7 @@ const Signup = () => {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    // check inputs are not empty
     if (inputs.fullName === '' || inputs.email === '' || inputs.password === '') {
       return alert('Please fill in all fields');
     }
@@ -32,6 +33,7 @@ const Signup = () => {
       }
     })
 
+    // return success message
     successMessage('Register is successed...')
     return navigate('/login')
   }

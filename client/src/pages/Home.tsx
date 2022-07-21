@@ -1,15 +1,22 @@
-import { useState } from "react";
+import { useQuery } from "@apollo/client";
+import { useEffect, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
+import { useNavigate } from "react-router-dom";
 import Column from "../components/Column";
 import CreateButtons from "../components/CreateButtons";
 import Header from "../components/Header";
-import { reorderColumn } from "../lib/utils";
+import { GET_USER } from "../graphql/auth";
+import { isAuthanticated, reorderColumn } from "../lib/utils";
 
 import { initialData } from "../mock-data";
 
 const Home = () => {
   const [state, setState] = useState<any>(initialData);
   //console.log(Object.entries(state.columns))
+  const navigate = useNavigate()
+  const { loading, error, data } = useQuery(GET_USER, {
+    variables: { token: localStorage.getItem('token') }
+  })
 
   const onEndDrag = (result: any) => {
     const { source, destination } = result;
@@ -83,9 +90,23 @@ const Home = () => {
 
   };
 
+  console.log(data, error, loading)
+
+  useEffect(() => {
+    // if user is not authanticated, redirects login page
+    if (!isAuthanticated()) {
+      return navigate('/login', { replace: true })
+    }
+
+    if (error) {
+      localStorage.removeItem('token')
+      return navigate('/login', { replace: true })
+    }
+  }, [navigate, error])
+
   return (
     <div className="w-screen h-screen bg-lightBlack">
-      <Header />
+      <Header user={data.getUser} />
       <div className="flex justify-end w-full max-w-[1000px] m-auto mt-8 px-2">
         <CreateButtons />
       </div>

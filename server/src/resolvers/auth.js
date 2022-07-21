@@ -1,23 +1,16 @@
 const User = require("../models/user.model");
 const { ApolloError } = require("apollo-server-errors");
-const { createToken } = require("../../utils/");
+const { createToken, verifyToken } = require("../../utils/");
 const jwt = require("jsonwebtoken");
 
 module.exports = {
   Query: {
     getUser: async (_parent, { token }, _ctx, _info) => {
+      console.log("tojen", token);
       // verify token and get id
-      const verifiedToken = jwt.verify(
-        token,
-        process.env.JWT_TOKEN_STR,
-        (err) => {
-          if (err) {
-            throw new ApolloError("Unauthorized Token", "UNAUTHORIZED");
-          }
-        }
-      );
+      const id = verifyToken(token);
 
-      const user = await User.findById(verifiedToken.id);
+      const user = await User.findById(id);
       if (!user) {
         throw new ApolloError("User does not found...", "NOT_FOUND");
       }

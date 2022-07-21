@@ -30,6 +30,7 @@ const Login = () => {
   };
 
   useEffect(() => {
+    //it shows error messages
     if (error) {
       errorMessage(error.message);
     }
@@ -37,10 +38,12 @@ const Login = () => {
 
 
   useEffect(() => {
+    // when logining,add token to local storage
     if (data) {
       localStorage.setItem('token', data.login.token)
     }
 
+    // if user is authanticated, redirects to home page
     if (isAuthanticated()) {
       navigate("/", { replace: true });
     }
