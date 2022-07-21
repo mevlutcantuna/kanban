@@ -1,3 +1,5 @@
+import { message } from "antd";
+
 export const reorderColumn = (
   sourceCol: any,
   startIndex: any,
@@ -13,4 +15,12 @@ export const reorderColumn = (
   };
 
   return newColumn;
+};
+
+export const successMessage = (msg: String) => {
+  return message.success(msg);
+};
+
+export const errorMessage = (msg: String) => {
+  return message.error(msg);
 };

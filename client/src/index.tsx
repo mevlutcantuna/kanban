@@ -1,16 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './styles/index.css';
 import App from './App';
-
+import './styles/index.css';
 import 'antd/dist/antd.min.css';
+
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+
+
+const client = new ApolloClient({
+  uri: 'http://localhost:8080/graphql',
+  cache: new InMemoryCache(),
+  connectToDevTools: true
+});
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
 root.render(
-  <React.Fragment>
+  <ApolloProvider client={client}>
     <App />
-  </React.Fragment>
+  </ApolloProvider>
 )

@@ -5,3 +5,7 @@
 * {
   @apply font-raleway m-0 p-0 box-border outline-none border-none list-none;
 }
+
+.ant-spin-nested-loading {
+  @apply bg-black;
+}
