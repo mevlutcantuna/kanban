@@ -1,4 +1,5 @@
 import { useQuery } from "@apollo/client";
+import { Spin } from "antd";
 import { useEffect, useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useNavigate } from "react-router-dom";
@@ -14,9 +15,12 @@ const Home = () => {
   const [state, setState] = useState<any>(initialData);
   //console.log(Object.entries(state.columns))
   const navigate = useNavigate()
+  const token = localStorage.getItem('token')
   const { loading, error, data } = useQuery(GET_USER, {
-    variables: { token: localStorage.getItem('token') }
+    variables: { token }
   })
+
+  console.log(data, error, loading)
 
   const onEndDrag = (result: any) => {
     const { source, destination } = result;
@@ -56,7 +60,7 @@ const Home = () => {
       // update the DB
 
 
-      return;
+      return 2;
     }
 
     // if user drops in a different colums
@@ -90,36 +94,38 @@ const Home = () => {
 
   };
 
-  console.log(data, error, loading)
 
   useEffect(() => {
     // if user is not authanticated, redirects login page
     if (!isAuthanticated()) {
       return navigate('/login', { replace: true })
     }
-
     if (error) {
       localStorage.removeItem('token')
       return navigate('/login', { replace: true })
     }
-  }, [navigate, error])
+  }, [navigate, error, token])
 
   return (
     <div className="w-screen h-screen bg-lightBlack">
-      <Header user={data.getUser} />
-      <div className="flex justify-end w-full max-w-[1000px] m-auto mt-8 px-2">
-        <CreateButtons />
-      </div>
-      <DragDropContext onDragEnd={onEndDrag}>
-        <div className="flex justify-between w-full max-w-[1000px] m-auto mt-4">
-          {Object.entries(state.columns).map(([columnId, column]: any) => {
-            const tasks = column.taskIds.map(
-              (taskId: any) => state.tasks[taskId]
-            );
-            return <Column key={columnId} column={column} tasks={tasks} />;
-          })}
+      {data ? <div>
+        <Header user={data.getUser} />
+        <div className="flex justify-end w-full max-w-[1000px] m-auto mt-8 px-2">
+          <CreateButtons />
         </div>
-      </DragDropContext>
+        <DragDropContext onDragEnd={onEndDrag}>
+          <div className="flex justify-between w-full max-w-[1000px] m-auto mt-4">
+            {Object.entries(state.columns).map(([columnId, column]: any) => {
+              const tasks = column.taskIds.map(
+                (taskId: any) => state.tasks[taskId]
+              );
+              return <Column key={columnId} column={column} tasks={tasks} />;
+            })}
+          </div>
+        </DragDropContext>
+
+      </div> : <Spin />}
+
     </div>
   );
 };
