@@ -21,7 +21,7 @@ const typeDefs = gql`
     id: ID!
     name: String!
     user: ID!
-    taskIds: [Task!]!
+    taskIds: [ID!]!
   }
 
   input RegisterInput {
