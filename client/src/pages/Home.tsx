@@ -16,11 +16,10 @@ const Home = () => {
   //console.log(Object.entries(state.columns))
   const navigate = useNavigate()
   const token = localStorage.getItem('token')
-  const { loading, error, data } = useQuery(GET_USER, {
+  const { error, data } = useQuery(GET_USER, {
     variables: { token }
   })
 
-  console.log(data, error, loading)
 
   const onEndDrag = (result: any) => {
     const { source, destination } = result;

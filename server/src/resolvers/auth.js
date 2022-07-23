@@ -1,12 +1,10 @@
 const User = require("../models/user.model");
 const { ApolloError } = require("apollo-server-errors");
 const { createToken, verifyToken } = require("../../utils/");
-const jwt = require("jsonwebtoken");
 
 module.exports = {
   Query: {
     getUser: async (_parent, { token }, _ctx, _info) => {
-      console.log("tojen", token);
       // verify token and get id
       const id = verifyToken(token);
 
