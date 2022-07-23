@@ -41,7 +41,8 @@ const typeDefs = gql`
   }
 
   type Query {
-    getUser(token: String): User!
+    getUser(token: String!): User!
+    getAllColumns(userId: String!): [Column!]!
   }
 
   type Mutation {

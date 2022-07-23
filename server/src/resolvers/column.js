@@ -2,7 +2,17 @@ const Column = require("../models/column.model");
 const { ApolloError } = require("apollo-server-errors");
 
 module.exports = {
-  Query: {},
+  Query: {
+    getAllColumns: async (_parent, args, _ctx, _info) => {
+      const { userId } = args;
+
+      const cols = await Column.find({ user: userId });
+
+      if (!cols) throw new ApolloError("Something went wrong...");
+
+      return cols;
+    },
+  },
   Mutation: {
     createColumn: async (_parent, args, _ctx, _info) => {
       const { name, userId } = args.column;
