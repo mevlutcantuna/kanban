@@ -41,10 +41,11 @@ const typeDefs = gql`
   }
 
   input TaskInput {
-    content: String!
-    userId: ID!
-    columnId: ID!
-    tag: String!
+    id: ID
+    content: String
+    userId: ID
+    columnId: ID
+    tag: String
   }
 
   type Query {
