@@ -4,7 +4,11 @@ const { ApolloError } = require("apollo-server-errors");
 
 module.exports = {
   Query: {
-    getAllTasks: async (_parent, args, _ctx, _info) => {},
+    getAllTasks: async (_parent, args, _ctx, _info) => {
+      const { userId } = args;
+      const tasks = await Task.find({ user: userId });
+      return tasks;
+    },
   },
   Mutation: {
     createTask: async (_parent, args, _ctx, _info) => {

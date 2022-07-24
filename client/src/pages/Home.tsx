@@ -21,6 +21,7 @@ const Home = () => {
     variables: { token }
   })
 
+  console.log(state)
 
   const onEndDrag = (result: any) => {
     const { source, destination } = result;
@@ -58,9 +59,6 @@ const Home = () => {
 
       setState(newState);
       // update the DB
-
-
-      return 2;
     }
 
     // if user drops in a different colums

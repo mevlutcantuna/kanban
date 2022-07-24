@@ -1,4 +1,5 @@
 const Column = require("../models/column.model");
+const Task = require("../models/task.model");
 const { ApolloError } = require("apollo-server-errors");
 
 module.exports = {
@@ -26,9 +27,13 @@ module.exports = {
       const { id } = args;
 
       const col = await Column.findByIdAndDelete(id);
-
       if (!col) {
         throw new ApolloError("Something went wrong...");
+      }
+
+      // delete the tasks depend on the column
+      for (let i = 0; i < col.taskIds.length; i++) {
+        await Task.findByIdAndDelete(col.taskIds[i]);
       }
 
       return col;
