@@ -52,7 +52,6 @@ module.exports = {
           "INCORRECT_PASSWORD"
         );
       }
-
       // create token
       const token = createToken(user.id);
       user.token = token;

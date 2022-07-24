@@ -1,17 +1,19 @@
 const mongoose = require("mongoose");
 
 const TaskSchema = new mongoose.Schema({
-  name: {
+  content: {
     type: String,
     require: true,
     unique: true,
   },
   user: {
-    type: mongoose.ObjectId(),
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
     require: true,
   },
   columnId: {
-    type: mongoose.ObjectId(),
+    type: mongoose.Schema.ObjectId,
+    ref: "Column",
     require: true,
   },
   tag: {

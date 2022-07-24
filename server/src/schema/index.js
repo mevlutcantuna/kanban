@@ -11,7 +11,7 @@ const typeDefs = gql`
 
   type Task {
     id: ID!
-    name: String!
+    content: String!
     columnId: ID!
     user: ID!
     tag: String!
@@ -40,9 +40,17 @@ const typeDefs = gql`
     userId: ID!
   }
 
+  input TaskInput {
+    content: String!
+    userId: ID!
+    columnId: ID!
+    tag: String!
+  }
+
   type Query {
-    getUser(token: String!): User!
+    getUser(token: String): User!
     getAllColumns(userId: String!): [Column!]!
+    getAllTasks(userId: String!): [Task!]!
   }
 
   type Mutation {
@@ -50,6 +58,9 @@ const typeDefs = gql`
     login(user: LoginInput): User!
     createColumn(column: ColumnInput): Column!
     deleteColumn(id: ID!): Column!
+    createTask(task: TaskInput!): Task!
+    updateTask(task: TaskInput!): Task!
+    deleteTask(id: ID!): Task!
   }
 `;
 

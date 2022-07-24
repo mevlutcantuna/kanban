@@ -16,6 +16,7 @@ const Home = () => {
   //console.log(Object.entries(state.columns))
   const navigate = useNavigate()
   const token = localStorage.getItem('token')
+
   const { error, data } = useQuery(GET_USER, {
     variables: { token }
   })

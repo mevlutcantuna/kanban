@@ -20,11 +20,13 @@ const Login = () => {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    await login({
+    const res = await login({
       variables: { user: { email: inputs.email, password: inputs.password } },
     });
 
-    if (data) {
+    if (res.data) {
+      // when logining,add token to local storage
+      localStorage.setItem('token', res.data.login.token)
       navigate("/", { replace: true });
     }
   };
@@ -38,11 +40,6 @@ const Login = () => {
 
 
   useEffect(() => {
-    // when logining,add token to local storage
-    if (data) {
-      localStorage.setItem('token', data.login.token)
-    }
-
     // if user is authanticated, redirects to home page
     if (isAuthanticated()) {
       navigate("/", { replace: true });
