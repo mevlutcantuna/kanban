@@ -10,6 +10,7 @@ module.exports = {
       return tasks;
     },
   },
+
   Mutation: {
     createTask: async (_parent, args, _ctx, _info) => {
       const { tag, content, userId, columnId } = args.task;
