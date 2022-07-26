@@ -17,11 +17,11 @@ export const reorderColumn = (
   return newColumn;
 };
 
-export const successMessage = (msg: String) => {
+export const successMessage = (msg: string) => {
   return message.success(msg);
 };
 
-export const errorMessage = (msg: String) => {
+export const errorMessage = (msg: string) => {
   return message.error(msg);
 };
 
@@ -38,4 +38,26 @@ export const generateUserLogo = (name: string) => {
     namewords[1].split("")[0] +
     namewords[2].split("")[0];
   return letters;
+};
+
+export const createKanbanState = (tasks: any, columns: any) => {
+  console.log(tasks, columns);
+  let newTasks: any = {};
+  let newColumns: any = {};
+
+  for (let i = 0; i < tasks?.length; i++) {
+    newTasks[tasks[i].id] = tasks[i];
+  }
+
+  for (let i = 0; i < columns?.length; i++) {
+    newColumns[columns[i].id] = columns[i];
+  }
+
+  const kanbanState = {
+    tasks: newTasks,
+    columns: newColumns,
+  };
+  console.log("deneme", kanbanState);
+
+  return kanbanState;
 };

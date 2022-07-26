@@ -7,21 +7,32 @@ import Column from "../components/Column";
 import CreateButtons from "../components/CreateButtons";
 import Header from "../components/Header";
 import { GET_USER } from "../graphql/auth";
-import { isAuthanticated, reorderColumn } from "../lib/utils";
+import { GET_ALL_COLUMNS } from "../graphql/column";
+import { GET_ALL_TASKS } from "../graphql/task";
+import { createKanbanState, isAuthanticated, reorderColumn } from "../lib/utils";
 
 import { initialData } from "../mock-data";
+import { IColumn } from "../types";
 
 const Home = () => {
   const [state, setState] = useState<any>(initialData);
   //console.log(Object.entries(state.columns))
-  const navigate = useNavigate()
-  const token = localStorage.getItem('token')
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
 
   const { error, data } = useQuery(GET_USER, {
-    variables: { token }
+    variables: { token },
+  });
+
+  const allColQuery = useQuery(GET_ALL_COLUMNS, {
+    variables: { userId: data?.getUser.id },
+  });
+
+  const allTaskQuery = useQuery(GET_ALL_TASKS, {
+    variables: { userId: data?.getUser.id },
   })
 
-  console.log(state)
+  //console.log(allColQuery.data?.getAllColumns, allTaskQuery.data?.getAllTasks)
 
   const onEndDrag = (result: any) => {
     const { source, destination } = result;
@@ -89,41 +100,49 @@ const Home = () => {
     setState(newState);
 
     // update the DB
-
   };
 
 
   useEffect(() => {
+    const kanbanState = createKanbanState(allTaskQuery.data?.getAllTasks, allColQuery.data?.getAllColumns);
+    setState(kanbanState)
+  }, [allColQuery, allTaskQuery])
+
+  useEffect(() => {
     // if user is not authanticated, redirects login page
     if (!isAuthanticated()) {
-      return navigate('/login', { replace: true })
+      return navigate("/login", { replace: true });
     }
     if (error) {
-      localStorage.removeItem('token')
-      return navigate('/login', { replace: true })
+      localStorage.removeItem("token");
+      return navigate("/login", { replace: true });
     }
-  }, [navigate, error, token])
+  }, [navigate, error, token]);
 
   return (
     <div className="w-screen h-screen bg-lightBlack">
-      {data ? <div>
-        <Header user={data.getUser} />
-        <div className="flex justify-end w-full max-w-[1000px] m-auto mt-8 px-2">
-          <CreateButtons />
-        </div>
-        <DragDropContext onDragEnd={onEndDrag}>
-          <div className="flex justify-between w-full max-w-[1000px] m-auto mt-4">
-            {Object.entries(state.columns).map(([columnId, column]: any) => {
-              const tasks = column.taskIds.map(
-                (taskId: any) => state.tasks[taskId]
-              );
-              return <Column key={columnId} column={column} tasks={tasks} />;
-            })}
+      {data ? (
+        <div>
+          <Header user={data.getUser} />
+          <div className="flex justify-end w-full max-w-[1000px] m-auto mt-8 px-2">
+            <CreateButtons />
           </div>
-        </DragDropContext>
-
-      </div> : <Spin />}
-
+          <DragDropContext onDragEnd={onEndDrag}>
+            <div className="flex justify-between w-full max-w-[1000px] m-auto mt-4">
+              {Object.entries(state.columns).map(([columnId, column]: any) => {
+                const tasks = column.taskIds.map(
+                  (taskId: any) => state.tasks[taskId]
+                );
+                return <Column key={columnId} column={column} tasks={tasks} />;
+              })}
+            </div>
+          </DragDropContext>
+        </div>
+      ) : (
+        <div className="h-[90vh] flex items-center justify-center">
+          <Spin />
+        </div>
+      )}
     </div>
   );
 };

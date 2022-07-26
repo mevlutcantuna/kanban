@@ -5,7 +5,7 @@ import ColumnItem from "./ColumnItem";
 const Column = ({ column, tasks }: any) => {
     return (
         <div className="w-full bg-[#202020] mx-2 p-6 rounded-md">
-            <h1 className="text-white text-xl">{column.title}</h1>
+            <h1 className="text-white text-xl">{column.name}</h1>
             <Droppable droppableId={column.id}>
                 {(provided: any) => {
                     return (

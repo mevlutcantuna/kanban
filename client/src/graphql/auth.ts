@@ -28,6 +28,7 @@ const GET_USER = gql`
   query getUser($token: String) {
     getUser(token: $token) {
       fullName
+      id
     }
   }
 `;
