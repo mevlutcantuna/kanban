@@ -8,7 +8,7 @@ import CreateButtons from "../components/CreateButtons";
 import Header from "../components/Header";
 import { GET_USER } from "../graphql/auth";
 import { GET_ALL_COLUMNS, UPDATE_COLUMN } from "../graphql/column";
-import { GET_ALL_TASKS } from "../graphql/task";
+import { GET_ALL_TASKS, UPDATE_TASK } from "../graphql/task";
 import { createKanbanState, errorMessage, isAuthanticated, reorderColumn } from "../lib/utils";
 
 //import { initialData } from "../mock-data";
@@ -34,6 +34,8 @@ const Home = () => {
   })
 
   const [updateCol] = useMutation(UPDATE_COLUMN)
+
+  const [updateTask] = useMutation(UPDATE_TASK)
 
   const onEndDrag = async (result: any) => {
     const { source, destination } = result;
@@ -61,8 +63,6 @@ const Home = () => {
         destination.index
       );
 
-      console.log(newColumn)
-
       const newState = {
         ...state,
         columns: {
@@ -71,7 +71,6 @@ const Home = () => {
         },
       };
 
-      console.log(newState)
       setState(newState);
 
       // update the DB
@@ -88,20 +87,26 @@ const Home = () => {
 
 
     // if user drops in a different colums
-    const startTaskIds = Array.from(sourceCol.taskIds);
-    const [removed] = startTaskIds.splice(source.index, 1);
 
+    // startTaskIds means that remains from removed columns
+    const startTaskIds = Array.from(sourceCol.taskIds);
+    // removed means that id of dragged task 
+    const [removed] = startTaskIds.splice(source.index, 1);
+    // newStartCol means new values of dragged column 
     const newStartCol = {
       ...sourceCol,
       taskIds: startTaskIds,
     };
 
+    // endTaskIds means task ids of dropped column
     const endTaskIds = Array.from(destinationCol.taskIds);
     endTaskIds.splice(destination.index, 0, removed);
     const newEndCol = {
       ...destinationCol,
       taskIds: endTaskIds,
     };
+
+    console.log({ startTaskIds, endTaskIds, newStartCol, newEndCol, removed })
 
     const newState = {
       ...state,
@@ -113,8 +118,37 @@ const Home = () => {
     };
 
     setState(newState);
-
     // update the DB
+
+    // update task columnId
+    await updateTask({
+      variables: {
+        task: {
+          id: removed,
+          columnId: newEndCol.id
+        }
+      }
+    })
+
+    // update colums new taskIds
+    await updateCol({
+      variables: {
+        column: {
+          id: newStartCol.id,
+          taskIds: newStartCol.taskIds
+        }
+      }
+    })
+
+    await updateCol({
+      variables: {
+        column: {
+          id: newEndCol.id,
+          taskIds: newEndCol.taskIds
+        }
+      }
+    })
+    return;
   };
 
   useEffect(() => {
