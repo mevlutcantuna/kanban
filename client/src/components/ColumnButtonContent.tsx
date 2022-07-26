@@ -4,10 +4,13 @@ import UpdateIconSM from '../assets/UpdateIconSM'
 import ItemModal from './ItemModal'
 
 type IProps = {
-    hide: () => void
+    hide: () => void;
+    deleteButton: (id: string) => void;
+    id: string;
+    updateButton: (id: string, name: string) => void;
 }
 
-const ButtonContent: React.FC<IProps> = ({ hide }) => {
+const ColumnButtonContent: React.FC<IProps> = ({ hide, deleteButton, id, updateButton }) => {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
     const showModal = () => {
@@ -23,9 +26,14 @@ const ButtonContent: React.FC<IProps> = ({ hide }) => {
         setIsModalVisible(false);
     };
 
+    const clickDelete = () => {
+        deleteButton(id)
+        setIsModalVisible(false)
+    }
+
     return (
         <div className='flex flex-col items-start'>
-            <button className='w-full flex items-center justify-center py-1 px-3 mb-1 rounded bg-gray-400'>
+            <button onClick={clickDelete} className='w-full flex items-center justify-center py-1 px-3 mb-1 rounded bg-gray-400'>
                 <DeleteIcon color='black' />
                 <span className='ml-1'>Delete</span>
             </button>
@@ -42,4 +50,4 @@ const ButtonContent: React.FC<IProps> = ({ hide }) => {
     )
 }
 
-export default ButtonContent
+export default ColumnButtonContent

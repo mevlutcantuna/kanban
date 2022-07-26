@@ -7,15 +7,15 @@ import Column from "../components/Column";
 import CreateButtons from "../components/CreateButtons";
 import Header from "../components/Header";
 import { GET_USER } from "../graphql/auth";
-import { GET_ALL_COLUMNS, UPDATE_COLUMN } from "../graphql/column";
-import { GET_ALL_TASKS, UPDATE_TASK } from "../graphql/task";
+import { CREATE_COLUMN, DELETE_COLUMN, GET_ALL_COLUMNS, UPDATE_COLUMN } from "../graphql/column";
+import { DELETE_TASK, GET_ALL_TASKS, UPDATE_TASK } from "../graphql/task";
 import { createKanbanState, errorMessage, isAuthanticated, reorderColumn } from "../lib/utils";
 
 //import { initialData } from "../mock-data";
 //import { IColumn } from "../types";
 
 const Home = () => {
-  const [state, setState] = useState<any>([]);
+  const [state, setState] = useState<any>({ tasks: {}, columns: {} });
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -34,9 +34,108 @@ const Home = () => {
   })
 
   const [updateCol] = useMutation(UPDATE_COLUMN)
+  const [createCol] = useMutation(CREATE_COLUMN)
+  const [deleteCol] = useMutation(DELETE_COLUMN)
 
   const [updateTask] = useMutation(UPDATE_TASK)
+  const [deleteTask] = useMutation(DELETE_TASK)
 
+  // create new column
+  const createNewCol = async (name: string) => {
+    if (name === '') {
+      return errorMessage('Please provide the text...')
+    }
+    const res = await createCol({
+      variables: {
+        column: {
+          name: name,
+          userId: data.getUser.id
+        }
+      },
+      onError: (err: any) => {
+        return errorMessage(err.message)
+      }
+    })
+
+    if (res.data) {
+      let newCol: any = {}
+      newCol[res.data.createColumn.id] = res.data.createColumn
+
+      const newState = {
+        tasks: { ...state.tasks },
+        columns: {
+          ...state.columns,
+          ...newCol
+        }
+      }
+      setState(newState)
+    }
+    return;
+  }
+
+  // delete column and dependenet tasks to the column
+  const deleteTheCol = async (id: string) => {
+    // delete the column
+    const colRes = await deleteCol({
+      variables: {
+        deleteColumnId: id
+      },
+      onError: (err: any) => {
+        return errorMessage(err.message)
+      }
+    });
+
+    const newColumns = Object.fromEntries(
+      Object.entries(state.columns).filter((column: any) => column[0] !== colRes.data.deleteColumn.id)
+    )
+
+    const removedColumnState = {
+      tasks: { ...state.tasks },
+      columns: { ...newColumns }
+    }
+
+    setState(removedColumnState)
+
+    // delete dependent tasks to the column
+    for (let i = 0; i < colRes.data.deleteColumn.taskIds.lenght; i++) {
+      const taskRes = await deleteTask({
+        variables: {
+          deleteTaskId: colRes.data.deleteColumn.taskIds[i].id
+        },
+        onError: (err: any) => {
+          return errorMessage(err.message)
+        }
+      })
+
+      const newTasks = Object.fromEntries(
+        Object.entries(state.tasks).filter((task: any) => task.id !== taskRes.data.deleteTask.id)
+      )
+
+      const removedTasksState = {
+        tasks: { ...newTasks },
+        columns: { ...state.columns }
+      }
+      setState(removedTasksState)
+    }
+  }
+
+  // update column name
+  const updateColumnName = async (id: string, newName: string) => {
+    if (newName === '') {
+      return errorMessage('Please provide the name...')
+    }
+    await updateCol({
+      variables: {
+        id,
+        name: newName
+      },
+      onError: (err: any) => {
+        return errorMessage(err.message)
+      }
+    })
+  }
+
+  // drag and drop works and updates in database
   const onEndDrag = async (result: any) => {
     const { source, destination } = result;
 
@@ -106,8 +205,7 @@ const Home = () => {
       taskIds: endTaskIds,
     };
 
-    console.log({ startTaskIds, endTaskIds, newStartCol, newEndCol, removed })
-
+    // create new state
     const newState = {
       ...state,
       columns: {
@@ -119,7 +217,6 @@ const Home = () => {
 
     setState(newState);
     // update the DB
-
     // update task columnId
     await updateTask({
       variables: {
@@ -152,13 +249,12 @@ const Home = () => {
   };
 
   useEffect(() => {
-    console.log(allTaskQuery.data?.getAllTasks)
     if (allTaskQuery.data?.getAllTasks && allColQuery.data?.getAllColumns) {
       const kanbanState = createKanbanState(allTaskQuery.data?.getAllTasks, allColQuery.data?.getAllColumns);
       setState(kanbanState)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allTaskQuery.data?.getAllTasks[0].id, allColQuery.data?.getAllColumns[0].id])
+  }, [allTaskQuery.data?.getAllTasks[0]?.id, allColQuery.data?.getAllColumns[0]?.id])
 
 
   useEffect(() => {
@@ -180,9 +276,6 @@ const Home = () => {
     if (allTaskQuery.error) {
       return errorMessage(allTaskQuery.error.message)
     }
-
-    console.log('worked')
-
   }, [navigate, error, token, allColQuery.error, allTaskQuery.error]);
 
   return (
@@ -193,15 +286,15 @@ const Home = () => {
             <div>
               <Header user={data.getUser} />
               <div className="flex justify-end w-full max-w-[1000px] m-auto mt-8 px-2">
-                <CreateButtons />
+                <CreateButtons createNewCol={createNewCol} />
               </div>
               <DragDropContext onDragEnd={onEndDrag}>
-                <div className="flex justify-between w-full max-w-[1000px] m-auto mt-4">
+                <div className="flex justify-between w-full max-w-[1000px] m-auto mt-4 overflow-auto">
                   {Object.entries(state.columns).map(([columnId, column]: any) => {
                     const tasks = column.taskIds.map(
                       (taskId: string) => state.tasks[taskId]
                     );
-                    return <Column key={columnId} column={column} tasks={tasks} />;
+                    return <Column updateColumnName={updateColumnName} deleteTheCol={deleteTheCol} key={columnId} column={column} tasks={tasks} />;
                   })}
                 </div>
               </DragDropContext>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import UpdateIcon from "../assets/UpdateIcon";
 import { Button, Popover } from "antd";
-import ButtonContent from "./ButtonContent";
+import ButtonContent from "./TaskButtonContent";
 
 const ColumnItem = ({ task, innerRef, ...props }: any) => {
     const [visible, setVisible] = useState<boolean>(false);
@@ -25,7 +25,7 @@ const ColumnItem = ({ task, innerRef, ...props }: any) => {
                 <Popover
                     visible={visible}
                     onVisibleChange={handleVisibleChange}
-                    content={<ButtonContent hide={hide} />}
+                    content={<ButtonContent updateButton={() => console.log('')} id={"dsa"} deleteButton={() => console.log('')} hide={hide} />}
                     placement="bottom"
                     trigger="click"
                 >

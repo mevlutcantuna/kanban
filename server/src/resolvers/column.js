@@ -14,7 +14,7 @@ module.exports = {
     createColumn: async (_parent, args, _ctx, _info) => {
       const { name, userId } = args.column;
       // check if there is a same name column
-      const col = await Column.findOne({ id: userId, name });
+      const col = await Column.findOne({ user: userId, name });
       if (col) {
         throw new ApolloError("You have the same name of a column...");
       }

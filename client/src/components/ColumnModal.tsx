@@ -1,5 +1,5 @@
 import Modal from "antd/lib/modal/Modal";
-import React from "react";
+import React, { useState } from "react";
 
 type IProps = {
     visible: boolean;
@@ -7,6 +7,7 @@ type IProps = {
     onOk: () => void;
     onCancel: () => void;
     title: string;
+    createNewCol: (name: string) => void
 };
 
 const ColumnModal: React.FC<IProps> = ({
@@ -15,7 +16,22 @@ const ColumnModal: React.FC<IProps> = ({
     onOk,
     onCancel,
     title,
+    createNewCol
 }) => {
+    const [name, setName] = useState<string>("")
+
+
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault()
+        setName(e.target.value)
+    }
+
+    const submit = () => {
+        createNewCol(name)
+        onCancel()
+        setName("")
+    }
+
     return (
         <Modal
             bodyStyle={{ backgroundColor: "#cecece" }}
@@ -27,11 +43,14 @@ const ColumnModal: React.FC<IProps> = ({
         >
             <div className="text-black text-2xl">{title}</div>
             <input
+                onChange={handleNameChange}
+                value={name}
+                type='text'
                 className="bg-transparent w-full border-solid border-[1px] border-black rounded p-2 my-4 text-black placeholder:text-slate-600"
                 placeholder="Enter Column Name"
             />
             <div className="flex justify-end">
-                <button className="bg-lightBlack px-4 py-2 rounded-sm text-gray-50" >Submit</button>
+                <button onClick={submit} className="bg-lightBlack px-4 py-2 rounded-sm text-gray-50" >Submit</button>
             </div>
         </Modal>
     );

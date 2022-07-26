@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import ColumnModal from "./ColumnModal";
 import ItemModal from "./ItemModal";
 
-const CreateButtons = () => {
+
+type IProps = {
+    createNewCol: (name: string) => void
+}
+
+const CreateButtons: React.FC<IProps> = ({ createNewCol }) => {
     const [isTaskModalVisible, setIsTaskModalVisible] = useState<boolean>(false);
     const [isColumnModalVisible, setIsColumnModalVisible] =
         useState<boolean>(false);
@@ -33,7 +38,10 @@ const CreateButtons = () => {
 
     return (
         <div>
-            <button onClick={showColumnModal} className="bg-[#9BA3AF] rounded p-2 mb-4 hover:bg-[#65686b] mr-4">
+            <button
+                onClick={showColumnModal}
+                className="bg-[#9BA3AF] rounded p-2 mb-4 hover:bg-[#65686b] mr-4"
+            >
                 Create Column
             </button>
             <button
@@ -50,6 +58,7 @@ const CreateButtons = () => {
                 onCancel={handleTaskCancel}
             />
             <ColumnModal
+                createNewCol={createNewCol}
                 title={"Create a new column"}
                 footer={null}
                 visible={isColumnModalVisible}

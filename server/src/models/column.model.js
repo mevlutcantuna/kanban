@@ -4,7 +4,7 @@ const ColumnSchema = new mongoose.Schema({
   name: {
     type: String,
     require: true,
-    unique: true,
+    unique: false,
   },
   user: {
     type: mongoose.Schema.ObjectId,

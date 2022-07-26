@@ -35,8 +35,8 @@ export const generateUserLogo = (name: string) => {
   const namewords = name.split(" ");
   const letters =
     namewords[0].split("")[0] +
-    namewords[1].split("")[0] +
-    namewords[2].split("")[0];
+    (namewords[1]?.split("") ? namewords[1]?.split("")[0] : "") +
+    (namewords[2]?.split("") ? namewords[2]?.split("")[0] : "");
   return letters;
 };
 

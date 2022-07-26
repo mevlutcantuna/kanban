@@ -10,6 +10,16 @@ export const GET_ALL_COLUMNS = gql`
   }
 `;
 
+export const CREATE_COLUMN = gql`
+  mutation CreateColumn($column: ColumnInput) {
+    createColumn(column: $column) {
+      id
+      taskIds
+      name
+    }
+  }
+`;
+
 export const UPDATE_COLUMN = gql`
   mutation UpdateColumn($column: ColumnInput!) {
     updateColumn(column: $column) {
