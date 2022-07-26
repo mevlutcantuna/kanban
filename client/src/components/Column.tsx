@@ -1,4 +1,3 @@
-
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import ColumnItem from "./ColumnItem";
 
@@ -14,7 +13,7 @@ const Column = ({ column, tasks }: any) => {
                             ref={provided.innerRef}
                             {...provided.droppableProps}
                         >
-                            {tasks.map((task: any, index: number) => (
+                            {tasks?.map((task: any, index: number) => (
                                 <Draggable draggableId={task.id} key={task.id} index={index}>
                                     {(provided) => {
                                         return (
@@ -34,7 +33,7 @@ const Column = ({ column, tasks }: any) => {
                     );
                 }}
             </Droppable>
-        </div >
+        </div>
     );
 };
 

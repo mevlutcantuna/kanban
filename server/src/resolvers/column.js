@@ -38,5 +38,21 @@ module.exports = {
 
       return col;
     },
+
+    updateColumn: async (_parent, args, _ctx, _info) => {
+      const { id, ...others } = args.column;
+
+      // if there is no task with the id
+      const col = await Column.findById(id);
+      if (!col) throw new ApolloError("There is no task with the id");
+
+      // update task
+      const updatedTask = await Column.findByIdAndUpdate(id, others, {
+        new: true,
+      });
+
+      updatedTask.save();
+      return updatedTask;
+    },
   },
 };

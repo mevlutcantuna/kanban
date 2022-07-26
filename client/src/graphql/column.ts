@@ -9,3 +9,24 @@ export const GET_ALL_COLUMNS = gql`
     }
   }
 `;
+
+export const UPDATE_COLUMN = gql`
+  mutation UpdateColumn($column: ColumnInput!) {
+    updateColumn(column: $column) {
+      id
+      name
+      taskIds
+    }
+  }
+`;
+
+export const DELETE_COLUMN = gql`
+  mutation DeleteColumn($deleteColumnId: ID!) {
+    deleteColumn(id: $deleteColumnId) {
+      id
+      name
+      user
+      taskIds
+    }
+  }
+`;

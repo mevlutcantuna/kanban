@@ -31,7 +31,6 @@ const Home = () => {
   const allTaskQuery = useQuery(GET_ALL_TASKS, {
     variables: { userId: data?.getUser.id },
   })
-
   //console.log(allColQuery.data?.getAllColumns, allTaskQuery.data?.getAllTasks)
 
   const onEndDrag = (result: any) => {
@@ -102,7 +101,6 @@ const Home = () => {
     // update the DB
   };
 
-
   useEffect(() => {
     const kanbanState = createKanbanState(allTaskQuery.data?.getAllTasks, allColQuery.data?.getAllColumns);
     setState(kanbanState)
@@ -131,7 +129,7 @@ const Home = () => {
             <div className="flex justify-between w-full max-w-[1000px] m-auto mt-4">
               {Object.entries(state.columns).map(([columnId, column]: any) => {
                 const tasks = column.taskIds.map(
-                  (taskId: any) => state.tasks[taskId]
+                  (taskId: string) => state.tasks[taskId]
                 );
                 return <Column key={columnId} column={column} tasks={tasks} />;
               })}

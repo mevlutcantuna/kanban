@@ -36,8 +36,10 @@ const typeDefs = gql`
   }
 
   input ColumnInput {
-    name: String!
-    userId: ID!
+    id: ID
+    name: String
+    userId: ID
+    taskIds: [String]
   }
 
   input TaskInput {
@@ -59,6 +61,7 @@ const typeDefs = gql`
     login(user: LoginInput): User!
     createColumn(column: ColumnInput): Column!
     deleteColumn(id: ID!): Column!
+    updateColumn(column: ColumnInput!): Column!
     createTask(task: TaskInput!): Task!
     updateTask(task: TaskInput!): Task!
     deleteTask(id: ID!): Task!

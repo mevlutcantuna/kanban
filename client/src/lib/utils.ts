@@ -57,7 +57,6 @@ export const createKanbanState = (tasks: any, columns: any) => {
     tasks: newTasks,
     columns: newColumns,
   };
-  console.log("deneme", kanbanState);
 
   return kanbanState;
 };
