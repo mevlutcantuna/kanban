@@ -13,8 +13,6 @@ const Header: React.FC<IProps> = ({ user }) => {
   const navigate = useNavigate()
   const logo = generateUserLogo(user?.fullName)
 
-  console.log('header')
-
   const logout = () => {
     localStorage.removeItem('token')
     return navigate('/login', { replace: true })
