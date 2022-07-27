@@ -31,7 +31,7 @@ const Column: React.FC<IProps> = ({ column, tasks, deleteTheCol, updateColumnNam
                     <Popover
                         visible={visible}
                         onVisibleChange={handleVisibleChange}
-                        content={<ColumnButtonContent id={column.id} updateButton={updateColumnName} deleteButton={deleteTheCol} hide={hide} />}
+                        content={<ColumnButtonContent column={column} updateButton={updateColumnName} deleteButton={deleteTheCol} hide={hide} />}
                         placement="bottom"
                         trigger="click"
                     >

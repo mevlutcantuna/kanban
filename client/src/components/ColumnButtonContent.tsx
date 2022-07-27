@@ -1,16 +1,19 @@
 import React, { useState } from 'react'
 import DeleteIcon from '../assets/DeleteIcon'
 import UpdateIconSM from '../assets/UpdateIconSM'
-import ItemModal from './ItemModal'
+import ColumnModal from './ColumnModal'
 
 type IProps = {
     hide: () => void;
     deleteButton: (id: string) => void;
-    id: string;
+    column: {
+        id: string,
+        name: string
+    };
     updateButton: (id: string, name: string) => void;
 }
 
-const ColumnButtonContent: React.FC<IProps> = ({ hide, deleteButton, id, updateButton }) => {
+const ColumnButtonContent: React.FC<IProps> = ({ hide, deleteButton, column, updateButton }) => {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
     const showModal = () => {
@@ -27,7 +30,7 @@ const ColumnButtonContent: React.FC<IProps> = ({ hide, deleteButton, id, updateB
     };
 
     const clickDelete = () => {
-        deleteButton(id)
+        deleteButton(column.id)
         setIsModalVisible(false)
     }
 
@@ -41,11 +44,14 @@ const ColumnButtonContent: React.FC<IProps> = ({ hide, deleteButton, id, updateB
                 <UpdateIconSM color='black' />
                 <span className='ml-1'>Update</span>
             </button>
-            <ItemModal title={"Update the task"}
+            <ColumnModal title={"Update the column"}
+                column={column}
+                submit={updateButton}
                 footer={null}
                 visible={isModalVisible}
                 onOk={handleOk}
-                onCancel={handleCancel} />
+                onCancel={handleCancel}
+                createNewCol={() => console.log('')} />
         </div>
     )
 }

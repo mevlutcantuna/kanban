@@ -59,6 +59,7 @@ const CreateButtons: React.FC<IProps> = ({ createNewCol }) => {
             />
             <ColumnModal
                 createNewCol={createNewCol}
+                submit={createNewCol}
                 title={"Create a new column"}
                 footer={null}
                 visible={isColumnModalVisible}

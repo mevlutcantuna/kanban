@@ -124,15 +124,38 @@ const Home = () => {
     if (newName === '') {
       return errorMessage('Please provide the name...')
     }
+
     await updateCol({
       variables: {
-        id,
-        name: newName
+        column: {
+          id,
+          name: newName
+        }
       },
       onError: (err: any) => {
         return errorMessage(err.message)
       }
     })
+
+    // change the col and implement to state
+    const newColumns = Object.fromEntries(
+      Object.entries(state.columns).map((col: any) => {
+        if (col[0] === id) {
+          const changedCol = { ...col[1], name: newName }
+          const newCols = { 0: col[0], 1: changedCol }
+          return { ...newCols }
+        } else {
+          return col;
+        }
+      })
+    )
+
+    const newState = {
+      tasks: { ...state.tasks },
+      columns: newColumns
+    }
+
+    setState(newState)
   }
 
   // drag and drop works and updates in database
@@ -253,8 +276,9 @@ const Home = () => {
       const kanbanState = createKanbanState(allTaskQuery.data?.getAllTasks, allColQuery.data?.getAllColumns);
       setState(kanbanState)
     }
+    console.log('checked')
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allTaskQuery.data?.getAllTasks[0]?.id, allColQuery.data?.getAllColumns[0]?.id])
+  }, [allTaskQuery.data?.getAllTasks, allColQuery.data?.getAllColumns])
 
 
   useEffect(() => {
@@ -278,10 +302,11 @@ const Home = () => {
     }
   }, [navigate, error, token, allColQuery.error, allTaskQuery.error]);
 
+
   return (
     <>
-      {data && state.tasks && state.columns &&
-        <Spin spinning={allColQuery.loading || allTaskQuery.loading || loading}>
+      <Spin spinning={allColQuery.loading || allTaskQuery.loading || loading}>
+        {data &&
           <div className="w-screen h-screen bg-lightBlack">
             <div>
               <Header user={data.getUser} />
@@ -300,7 +325,8 @@ const Home = () => {
               </DragDropContext>
             </div>
           </div>
-        </Spin>}
+        }
+      </Spin>
     </>
 
   );
