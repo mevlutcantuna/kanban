@@ -1,5 +1,5 @@
 import Modal from "antd/lib/modal/Modal";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type IProps = {
     column?: {
@@ -25,7 +25,7 @@ const ColumnModal: React.FC<IProps> = ({
     column,
     createNewCol
 }) => {
-    const [name, setName] = useState<string>(column ? column.name : '')
+    const [name, setName] = useState<string>("")
 
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,8 +41,15 @@ const ColumnModal: React.FC<IProps> = ({
         }
         submit(column ? column.id : '', name)
         onCancel()
-        setName("")
     }
+
+
+    useEffect(() => {
+        // when component is initiliazed, set initail name of the columns 
+        if (column?.name) {
+            setName(column.name)
+        }
+    }, [column])
 
     return (
         <Modal

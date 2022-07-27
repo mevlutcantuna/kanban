@@ -276,7 +276,6 @@ const Home = () => {
       const kanbanState = createKanbanState(allTaskQuery.data?.getAllTasks, allColQuery.data?.getAllColumns);
       setState(kanbanState)
     }
-    console.log('checked')
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allTaskQuery.data?.getAllTasks, allColQuery.data?.getAllColumns])
 

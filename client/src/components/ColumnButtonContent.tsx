@@ -44,7 +44,8 @@ const ColumnButtonContent: React.FC<IProps> = ({ hide, deleteButton, column, upd
                 <UpdateIconSM color='black' />
                 <span className='ml-1'>Update</span>
             </button>
-            <ColumnModal title={"Update the column"}
+            <ColumnModal
+                title={"Update the column"}
                 column={column}
                 submit={updateButton}
                 footer={null}
