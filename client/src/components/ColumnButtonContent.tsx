@@ -47,12 +47,12 @@ const ColumnButtonContent: React.FC<IProps> = ({ hide, deleteButton, column, upd
             <ColumnModal
                 title={"Update the column"}
                 column={column}
-                submit={updateButton}
+                updateCol={updateButton}
                 footer={null}
                 visible={isModalVisible}
                 onOk={handleOk}
                 onCancel={handleCancel}
-                createNewCol={() => console.log('')} />
+            />
         </div>
     )
 }

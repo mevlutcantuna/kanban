@@ -12,6 +12,18 @@ export const GET_ALL_TASKS = gql`
   }
 `;
 
+export const CREATE_TASK = gql`
+  mutation CreateTask($task: TaskInput!) {
+    createTask(task: $task) {
+      id
+      content
+      columnId
+      user
+      tag
+    }
+  }
+`;
+
 export const UPDATE_TASK = gql`
   mutation UpdateTask($task: TaskInput!) {
     updateTask(task: $task) {

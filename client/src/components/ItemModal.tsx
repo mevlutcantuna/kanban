@@ -1,5 +1,7 @@
 import Modal from "antd/lib/modal/Modal";
-import React from "react";
+import React, { memo, useState } from "react";
+import { useEffect } from "react";
+import { errorMessage } from "../lib/utils";
 
 type IProps = {
     visible: boolean;
@@ -7,6 +9,10 @@ type IProps = {
     onOk: () => void;
     onCancel: () => void;
     title: string;
+    createNewTask?: (content: string, columnId: string, tag: string) => void;
+    updateTheTask?: (content: string, tag: string, taskId: string) => void;
+    columns?: any
+    task?: any
 };
 
 const ItemModal: React.FC<IProps> = ({
@@ -15,7 +21,55 @@ const ItemModal: React.FC<IProps> = ({
     onOk,
     onCancel,
     title,
+    columns,
+    createNewTask,
+    updateTheTask,
+    task
 }) => {
+    const [content, setContent] = useState("");
+    const [tag, setTag] = useState("");
+    const [column, setColumn] = useState("")
+
+    const handleContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setContent(e.target.value)
+    }
+
+    const handleTagChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setTag(e.target.value)
+    }
+
+    const handleColumnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setColumn(e.target.value)
+    }
+
+
+    const click = () => {
+        if (content === "" || tag === "") {
+            return errorMessage('Please provide all inputs...')
+        }
+
+        if (title === 'Create a new task') {
+            if (column === "") {
+                return errorMessage('Please provide all inputs...')
+            }
+            if (content && column && tag) {
+                createNewTask?.(content, tag, column)
+                setContent("")
+                return onCancel()
+            }
+        }
+        updateTheTask?.(content, tag, task?.id)
+        return onCancel()
+    }
+
+
+    useEffect(() => {
+        if (title === "Update the task") {
+            setContent(task?.content)
+            setTag(task?.tag)
+        }
+    }, [task?.content, task?.tag, title])
+
     return (
         <Modal
             bodyStyle={{ backgroundColor: "#cecece" }}
@@ -27,19 +81,33 @@ const ItemModal: React.FC<IProps> = ({
         >
             <div className="text-black text-2xl">{title}</div>
             <input
+                value={content}
+                onChange={handleContentChange}
+                type="text"
                 className="bg-transparent w-full border-solid border-[1px] border-black rounded p-2 mt-4 text-black placeholder:text-slate-600"
                 placeholder="Enter Task"
             />
-            <select className="bg-transparent w-full border-solid border-[1px] border-black rounded p-2 my-4 text-black">
+            <select defaultValue={tag} onChange={handleTagChange} className="bg-transparent w-full border-solid border-[1px] border-black rounded p-2 mt-4 text-black">
+                <option hidden>Choose Tag</option>
                 <option value='Low'>Low</option>
                 <option value='Medium'>Medium</option>
                 <option value='High'>High</option>
             </select>
+            {title === 'Create a new task' &&
+                <select defaultValue={column} onChange={handleColumnChange} className="bg-transparent w-full border-solid border-[1px] border-black rounded p-2 mt-4 text-black">
+                    <option hidden>Choose Column</option>
+                    {
+                        columns?.map((col: any) => (
+                            <option key={col.id} value={col.id}>{col.name}</option>
+                        ))
+                    }
+                </select>
+            }
             <div className="flex justify-end">
-                <button className="bg-lightBlack px-4 py-2 rounded-sm text-gray-50" >Submit</button>
+                <button onClick={click} className="bg-lightBlack px-4 py-2 rounded-sm text-gray-50 mt-4" >Submit</button>
             </div>
         </Modal>
     );
 };
 
-export default ItemModal;
+export default memo(ItemModal);

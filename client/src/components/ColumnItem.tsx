@@ -2,9 +2,16 @@ import React, { useState } from "react";
 
 import UpdateIcon from "../assets/UpdateIcon";
 import { Button, Popover } from "antd";
-import ButtonContent from "./TaskButtonContent";
+import TaskButtonContent from "./TaskButtonContent";
 
-const ColumnItem = ({ task, innerRef, ...props }: any) => {
+type IProps = {
+    task: any;
+    innerRef: any;
+    updateTheTask: (content: string, tag: string, taskId: string) => void;
+    deleteTheTask: (taskId: string) => void
+}
+
+const ColumnItem: React.FC<IProps> = ({ task, innerRef, updateTheTask, deleteTheTask, ...props }) => {
     const [visible, setVisible] = useState<boolean>(false);
 
     const hide = () => {
@@ -25,7 +32,7 @@ const ColumnItem = ({ task, innerRef, ...props }: any) => {
                 <Popover
                     visible={visible}
                     onVisibleChange={handleVisibleChange}
-                    content={<ButtonContent updateButton={() => console.log('')} id={"dsa"} deleteButton={() => console.log('')} hide={hide} />}
+                    content={<TaskButtonContent updateTheTask={updateTheTask} deleteTheTask={deleteTheTask} task={task} hide={hide} />}
                     placement="bottom"
                     trigger="click"
                 >

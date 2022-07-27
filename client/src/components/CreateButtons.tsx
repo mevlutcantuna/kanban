@@ -4,10 +4,12 @@ import ItemModal from "./ItemModal";
 
 
 type IProps = {
-    createNewCol: (name: string) => void
+    createNewCol: (name: string) => void;
+    createNewTask: (content: string, columnId: string, tag: string) => void;
+    columns: any
 }
 
-const CreateButtons: React.FC<IProps> = ({ createNewCol }) => {
+const CreateButtons: React.FC<IProps> = ({ createNewCol, createNewTask, columns }) => {
     const [isTaskModalVisible, setIsTaskModalVisible] = useState<boolean>(false);
     const [isColumnModalVisible, setIsColumnModalVisible] =
         useState<boolean>(false);
@@ -51,15 +53,16 @@ const CreateButtons: React.FC<IProps> = ({ createNewCol }) => {
                 Create Task
             </button>
             <ItemModal
+                columns={columns}
                 title={"Create a new task"}
                 footer={null}
                 visible={isTaskModalVisible}
                 onOk={handleTaskOk}
                 onCancel={handleTaskCancel}
+                createNewTask={createNewTask}
             />
             <ColumnModal
                 createNewCol={createNewCol}
-                submit={createNewCol}
                 title={"Create a new column"}
                 footer={null}
                 visible={isColumnModalVisible}

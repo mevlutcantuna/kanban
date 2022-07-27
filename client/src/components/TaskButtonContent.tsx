@@ -4,13 +4,13 @@ import UpdateIconSM from '../assets/UpdateIconSM'
 import ItemModal from './ItemModal'
 
 type IProps = {
+    task: any;
     hide: () => void;
-    deleteButton: (id: string) => void;
-    id: string;
-    updateButton: (id: string, name: string) => void;
+    updateTheTask?: (content: string, tag: string, taskId: string) => void;
+    deleteTheTask?: (taskId: string) => void;
 }
 
-const ButtonContent: React.FC<IProps> = ({ hide, deleteButton, id, updateButton }) => {
+const ButtonContent: React.FC<IProps> = ({ hide, deleteTheTask, task, updateTheTask }) => {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
 
     const showModal = () => {
@@ -27,7 +27,7 @@ const ButtonContent: React.FC<IProps> = ({ hide, deleteButton, id, updateButton 
     };
 
     const click = () => {
-        deleteButton(id)
+        deleteTheTask?.(task?.id)
         setIsModalVisible(false)
     }
 
@@ -42,10 +42,13 @@ const ButtonContent: React.FC<IProps> = ({ hide, deleteButton, id, updateButton 
                 <span className='ml-1'>Update</span>
             </button>
             <ItemModal title={"Update the task"}
+                task={task}
                 footer={null}
                 visible={isModalVisible}
                 onOk={handleOk}
-                onCancel={handleCancel} />
+                onCancel={handleCancel}
+                updateTheTask={updateTheTask}
+            />
         </div>
     )
 }

@@ -11,8 +11,8 @@ type IProps = {
     onOk: () => void;
     onCancel: () => void;
     title: string;
-    submit: (id: string, name: string) => void
-    createNewCol: (name: string) => void
+    updateCol?: (id: string, name: string) => void
+    createNewCol?: (name: string) => void
 };
 
 const ColumnModal: React.FC<IProps> = ({
@@ -21,7 +21,7 @@ const ColumnModal: React.FC<IProps> = ({
     onOk,
     onCancel,
     title,
-    submit,
+    updateCol,
     column,
     createNewCol
 }) => {
@@ -35,11 +35,11 @@ const ColumnModal: React.FC<IProps> = ({
 
     const click = () => {
         if (title === 'Create a new column') {
-            createNewCol(name)
+            createNewCol?.(name)
             onCancel()
             return setName("")
         }
-        submit(column ? column.id : '', name)
+        updateCol?.(column ? column.id : '', name)
         onCancel()
     }
 

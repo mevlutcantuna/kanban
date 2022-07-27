@@ -10,9 +10,11 @@ type IProps = {
     tasks: any,
     deleteTheCol: (id: string) => void
     updateColumnName: (id: string, name: string) => void
+    updateTheTask: (content: string, tag: string, taskId: string) => void;
+    deleteTheTask: (taskId: string) => void
 }
 
-const Column: React.FC<IProps> = ({ column, tasks, deleteTheCol, updateColumnName }) => {
+const Column: React.FC<IProps> = ({ column, tasks, deleteTheCol, updateColumnName, updateTheTask, deleteTheTask }) => {
     const [visible, setVisible] = useState<boolean>(false);
 
     const hide = () => {
@@ -54,6 +56,8 @@ const Column: React.FC<IProps> = ({ column, tasks, deleteTheCol, updateColumnNam
                                         {(provided) => {
                                             return (
                                                 <ColumnItem
+                                                    updateTheTask={updateTheTask}
+                                                    deleteTheTask={deleteTheTask}
                                                     innerRef={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
