@@ -20,6 +20,10 @@ const Login = () => {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (inputs.email === '' || inputs.password === '') {
+      return errorMessage('Please provide all inputs...')
+    }
+
     const res = await login({
       variables: { user: { email: inputs.email, password: inputs.password } },
     });
@@ -50,7 +54,7 @@ const Login = () => {
     <Spin spinning={loading}>
       <div className="w-screen h-screen pt-40 flex justify-center bg-lightBlack">
         <div className="w-full max-w-sm h-80 flex flex-col items-center">
-          <h1 className="text-gray-300 text-3xl">Log In</h1>
+          <h1 data-testid='header' className="text-gray-300 text-3xl">Log In</h1>
           <form onSubmit={submit} className="w-full flex flex-col mt-10">
             <input
               value={inputs.email}
