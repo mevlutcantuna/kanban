@@ -46,6 +46,10 @@ module.exports = {
       const col = await Column.findById(id);
       if (!col) throw new ApolloError("There is no task with the id");
 
+      // if there is a column with same name, return error
+      const cl = await Column.findOne({ name: others.name });
+      if (cl) throw new ApolloError("There is a column with same name");
+
       // update task
       const updatedTask = await Column.findByIdAndUpdate(id, others, {
         new: true,

@@ -33,14 +33,20 @@ const ColumnModal: React.FC<IProps> = ({
         setName(e.target.value)
     }
 
-    const click = () => {
+    const click = async () => {
         if (title === 'Create a new column') {
-            createNewCol?.(name)
-            onCancel()
-            return setName("")
+            const res = await createNewCol?.(name)
+            if (res) {
+                onCancel()
+                return setName("")
+            }
+        } else {
+            const res = await updateCol?.(column ? column.id : '', name)
+            console.log(res)
+            if (res) {
+                return onCancel()
+            }
         }
-        updateCol?.(column ? column.id : '', name)
-        onCancel()
     }
 
 

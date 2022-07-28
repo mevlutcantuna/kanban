@@ -9,7 +9,7 @@ import Header from "../components/Header";
 import { GET_USER } from "../graphql/auth";
 import { CREATE_COLUMN, DELETE_COLUMN, GET_ALL_COLUMNS, UPDATE_COLUMN } from "../graphql/column";
 import { CREATE_TASK, DELETE_TASK, GET_ALL_TASKS, UPDATE_TASK } from "../graphql/task";
-import { createKanbanState, errorMessage, isAuthanticated, reorderColumn } from "../lib/utils";
+import { createKanbanState, errorMessage, isAuthanticated, reorderColumn, successMessage } from "../lib/utils";
 
 //import { initialData } from "../mock-data";
 //import { IColumn } from "../types";
@@ -71,7 +71,13 @@ const Home = () => {
       }
       setState(newState)
     }
-    return;
+
+    if (!res.errors) {
+      successMessage('Created new column...')
+      return true
+    } else {
+      return false
+    }
   }
 
   // delete column and dependenet tasks to the column
@@ -118,6 +124,13 @@ const Home = () => {
       }
       setState(removedTasksState)
     }
+
+    if (!colRes.errors) {
+      successMessage('Deleted the column...')
+      return true
+    } else {
+      return false
+    }
   }
 
   // update column name
@@ -126,7 +139,7 @@ const Home = () => {
       return errorMessage('Please provide the name...')
     }
 
-    await updateCol({
+    const res = await updateCol({
       variables: {
         column: {
           id,
@@ -151,18 +164,23 @@ const Home = () => {
       })
     )
 
+    // update state
     const newState = {
       tasks: { ...state.tasks },
       columns: newColumns
     }
-
     setState(newState)
+
+    if (!res.errors) {
+      successMessage('Updated the column...')
+      return true
+    } else {
+      return false
+    }
   }
 
   // create new task
   const createNewTask = async (content: string, tag: string, columnId: string,) => {
-    console.log('create new task', content, columnId, tag)
-    /*
     // create task in db
     const newTaskRes = await createTask({
       variables: {
@@ -172,17 +190,48 @@ const Home = () => {
           tag,
           userId: data.getUser.id
         }
+      },
+      onError: (err: any) => {
+        return errorMessage(err.message)
       }
     })
-    */
-    // 
-    return 2
+
+    // create new task object
+    const newTask = { [newTaskRes.data.createTask.id]: newTaskRes.data.createTask }
+
+    // update tasks
+    const newTasks = { ...state.tasks, ...newTask }
+
+    // update the columns
+    const newColumns = Object.fromEntries(
+      Object.entries(state.columns).map((col: any) => {
+        if (col[0] === newTaskRes.data.createTask.columnId) {
+          const newTaskIds = [...col[1].taskIds, newTaskRes.data.createTask.id]
+          const updatedCol = { 0: col[0], 1: { ...col[1], taskIds: newTaskIds } }
+          return { ...updatedCol }
+        } else {
+          return col;
+        }
+      })
+    )
+
+    // updated the state
+    const newState = {
+      tasks: { ...newTasks },
+      columns: { ...newColumns }
+    }
+    setState(newState)
+
+    if (!newTaskRes.errors) {
+      successMessage('Created new task...')
+      return true
+    } else {
+      return false
+    }
   }
 
   // update the task and dependent column
   const updateTheTask = async (content: string, tag: string, taskId: string) => {
-    console.log('update the task', content, tag, taskId)
-    console.log("state", state)
     const res = await updateTask({
       variables: {
         task: {
@@ -208,23 +257,29 @@ const Home = () => {
       })
     )
 
+    // update the state
     const newState = {
       tasks: { ...newTasks },
       columns: { ...state.columns }
     }
-    console.log(newState)
     setState(newState)
+
+    if (!res.errors) {
+      successMessage('Updated the task...')
+      return true
+    } else {
+      return false
+    }
   }
 
   // delete the task and update taskIds of dependent column
   const deleteTheTask = async (taskId: string) => {
-    console.log(state.tasks.length)
     // delete task from DB
     const deletedTaskRes = await deleteTask({
       variables: {
         deleteTaskId: taskId
       },
-      onError: (err) => {
+      onError: (err: any) => {
         return errorMessage(err.message)
       }
     })
@@ -241,7 +296,7 @@ const Home = () => {
           taskIds: newTaskIds
         }
       },
-      onError: (err) => {
+      onError: (err: any) => {
         return errorMessage(err.message)
       }
     })
@@ -265,8 +320,14 @@ const Home = () => {
       tasks: { ...newTasks },
       columns: { ...newColumns }
     }
-
     setState(newState)
+
+    if (!deletedTaskRes.errors) {
+      successMessage('Deleted the task...')
+      return true
+    } else {
+      return false
+    }
   }
 
   // drag and drop works and updates in database
@@ -314,10 +375,12 @@ const Home = () => {
             id: newColumn.id
           }
         },
+        onError: (err: any) => {
+          return errorMessage(err.message)
+        }
       })
       return;
     }
-
 
     // if user drops in a different colums
 
@@ -358,6 +421,9 @@ const Home = () => {
           id: removed,
           columnId: newEndCol.id
         }
+      },
+      onError: (err: any) => {
+        return errorMessage(err.message)
       }
     })
 
@@ -377,6 +443,9 @@ const Home = () => {
           id: newEndCol.id,
           taskIds: newEndCol.taskIds
         }
+      },
+      onError: (err: any) => {
+        return errorMessage(err.message)
       }
     })
     return;
