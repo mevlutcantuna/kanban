@@ -3,14 +3,18 @@ import { Spin } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LOGIN } from "../graphql/auth";
-import { errorMessage, isAuthanticated } from "../lib/utils";
+import { errorMessage, isAuthanticated, successMessage } from "../lib/utils";
 
 const Login = () => {
   const [inputs, setInputs] = useState<{ email: string; password: string }>({
     email: "",
     password: "",
   });
-  const [login, { data, error, loading }] = useMutation(LOGIN);
+  const [login, { data, loading }] = useMutation(LOGIN, {
+    onError(err) {
+      return errorMessage(err.message)
+    }
+  });
   const navigate = useNavigate();
 
   const handleInputsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,17 +35,10 @@ const Login = () => {
     if (res.data) {
       // when logining,add token to local storage
       localStorage.setItem('token', res.data.login.token)
+      successMessage('Login success...')
       navigate("/", { replace: true });
     }
   };
-
-  useEffect(() => {
-    //it shows error messages
-    if (error) {
-      errorMessage(error.message);
-    }
-  }, [error]);
-
 
   useEffect(() => {
     // if user is authanticated, redirects to home page
