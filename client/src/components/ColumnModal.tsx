@@ -42,7 +42,6 @@ const ColumnModal: React.FC<IProps> = ({
             }
         } else {
             const res = await updateCol?.(column ? column.id : '', name)
-            console.log(res)
             if (res) {
                 return onCancel()
             }

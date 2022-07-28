@@ -44,6 +44,10 @@ module.exports = {
       const task = await Task.findById(id);
       if (!task) throw new ApolloError("There is no task with the id");
 
+      // if there is a task with same content, return error
+      const isTaskExisted = await Task.findOne({ content: others.content });
+      if (isTaskExisted) throw new ApolloError("There is no task with the id");
+
       // update task
       const updatedTask = await Task.findByIdAndUpdate(id, others, {
         new: true,

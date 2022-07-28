@@ -43,7 +43,7 @@ const ItemModal: React.FC<IProps> = ({
     }
 
 
-    const click = () => {
+    const click = async () => {
         if (content === "" || tag === "") {
             return errorMessage('Please provide all inputs...')
         }
@@ -52,16 +52,22 @@ const ItemModal: React.FC<IProps> = ({
             if (column === "") {
                 return errorMessage('Please provide all inputs...')
             }
-            createNewTask?.(content, tag, column)
-            setContent("")
-            setTag("")
-            setColumn("")
-            return onCancel()
-        }
-        updateTheTask?.(content, tag, task?.id)
-        return onCancel()
-    }
+            const res = await createNewTask?.(content, tag, column)
+            if (res) {
+                setContent("")
+                setTag("")
+                setColumn("")
+                return onCancel()
+            }
 
+        } else {
+            const res = await updateTheTask?.(content, tag, task?.id)
+            if (res) {
+                return onCancel()
+            }
+        }
+
+    }
 
     useEffect(() => {
         if (title === "Update the task") {

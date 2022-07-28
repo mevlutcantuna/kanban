@@ -122,6 +122,7 @@ const Home = () => {
         tasks: { ...newTasks },
         columns: { ...state.columns }
       }
+
       setState(removedTasksState)
     }
 
@@ -169,10 +170,10 @@ const Home = () => {
       tasks: { ...state.tasks },
       columns: newColumns
     }
-    setState(newState)
 
     if (!res.errors) {
       successMessage('Updated the column...')
+      setState(newState)
       return true
     } else {
       return false
@@ -220,9 +221,9 @@ const Home = () => {
       tasks: { ...newTasks },
       columns: { ...newColumns }
     }
-    setState(newState)
 
     if (!newTaskRes.errors) {
+      setState(newState)
       successMessage('Created new task...')
       return true
     } else {
@@ -262,9 +263,9 @@ const Home = () => {
       tasks: { ...newTasks },
       columns: { ...state.columns }
     }
-    setState(newState)
 
     if (!res.errors) {
+      setState(newState)
       successMessage('Updated the task...')
       return true
     } else {
@@ -320,9 +321,9 @@ const Home = () => {
       tasks: { ...newTasks },
       columns: { ...newColumns }
     }
-    setState(newState)
 
     if (!deletedTaskRes.errors) {
+      setState(newState)
       successMessage('Deleted the task...')
       return true
     } else {
