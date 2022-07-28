@@ -27,8 +27,8 @@ const ItemModal: React.FC<IProps> = ({
     task
 }) => {
     const [content, setContent] = useState("");
-    const [tag, setTag] = useState("");
-    const [column, setColumn] = useState("")
+    const [tag, setTag] = useState<string>("");
+    const [column, setColumn] = useState<string>("")
 
     const handleContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setContent(e.target.value)
@@ -52,11 +52,11 @@ const ItemModal: React.FC<IProps> = ({
             if (column === "") {
                 return errorMessage('Please provide all inputs...')
             }
-            if (content && column && tag) {
-                createNewTask?.(content, tag, column)
-                setContent("")
-                return onCancel()
-            }
+            createNewTask?.(content, tag, column)
+            setContent("")
+            setTag("")
+            setColumn("")
+            return onCancel()
         }
         updateTheTask?.(content, tag, task?.id)
         return onCancel()
@@ -87,14 +87,14 @@ const ItemModal: React.FC<IProps> = ({
                 className="bg-transparent w-full border-solid border-[1px] border-black rounded p-2 mt-4 text-black placeholder:text-slate-600"
                 placeholder="Enter Task"
             />
-            <select defaultValue={tag} onChange={handleTagChange} className="bg-transparent w-full border-solid border-[1px] border-black rounded p-2 mt-4 text-black">
+            <select value={tag} onChange={handleTagChange} className="bg-transparent w-full border-solid border-[1px] border-black rounded p-2 mt-4 text-black">
                 <option hidden>Choose Tag</option>
                 <option value='Low'>Low</option>
                 <option value='Medium'>Medium</option>
                 <option value='High'>High</option>
             </select>
             {title === 'Create a new task' &&
-                <select defaultValue={column} onChange={handleColumnChange} className="bg-transparent w-full border-solid border-[1px] border-black rounded p-2 mt-4 text-black">
+                <select value={column} onChange={handleColumnChange} className="bg-transparent w-full border-solid border-[1px] border-black rounded p-2 mt-4 text-black">
                     <option hidden>Choose Column</option>
                     {
                         columns?.map((col: any) => (

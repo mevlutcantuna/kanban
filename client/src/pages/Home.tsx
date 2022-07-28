@@ -160,7 +160,7 @@ const Home = () => {
   }
 
   // create new task
-  const createNewTask = async (content: string, columnId: string, tag: string) => {
+  const createNewTask = async (content: string, tag: string, columnId: string,) => {
     console.log('create new task', content, columnId, tag)
     /*
     // create task in db
