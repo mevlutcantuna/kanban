@@ -1,15 +1,13 @@
 import React, { useState } from 'react'
 import DeleteIcon from '../assets/DeleteIcon'
 import UpdateIconSM from '../assets/UpdateIconSM'
+import { IColumn } from '../types'
 import ColumnModal from './ColumnModal'
 
 type IProps = {
     hide: () => void;
     deleteButton: (id: string) => void;
-    column: {
-        id: string,
-        name: string
-    };
+    column: IColumn;
     updateButton: (id: string, name: string) => void;
 }
 
@@ -30,7 +28,7 @@ const ColumnButtonContent: React.FC<IProps> = ({ hide, deleteButton, column, upd
     };
 
     const clickDelete = () => {
-        deleteButton(column.id)
+        deleteButton(column.id as string)
         setIsModalVisible(false)
     }
 

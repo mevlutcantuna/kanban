@@ -2,11 +2,10 @@ import React, { memo } from "react";
 import { useNavigate } from "react-router-dom";
 import LogoutIcon from "../assets/LogoutIcon";
 import { generateUserLogo } from "../lib/utils";
+import { IUser } from "../types";
 
 type IProps = {
-  user: {
-    fullName: string
-  }
+  user: IUser
 }
 
 const Header: React.FC<IProps> = ({ user }) => {

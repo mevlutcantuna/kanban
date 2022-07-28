@@ -26,6 +26,14 @@ module.exports = {
     deleteColumn: async (_parent, args, _ctx, _info) => {
       const { id } = args;
 
+      // get user id of column owner
+      const colInfo = await Column.findById(id);
+      // if there is only one columns, show error that user must have at least one column
+      const colOfUsers = await Column.find({ user: colInfo.user });
+      if (colOfUsers.length <= 1)
+        throw new ApolloError("You must have one column at least...");
+
+      // delete column
       const col = await Column.findByIdAndDelete(id);
       if (!col) {
         throw new ApolloError("Something went wrong...");

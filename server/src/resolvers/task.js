@@ -16,7 +16,8 @@ module.exports = {
       const { tag, content, userId, columnId } = args.task;
 
       // if there is a task with same content, return warning
-      const taskExists = await Task.findOne({ content });
+      const taskExists = await Task.findOne({ content, user: userId });
+
       if (taskExists)
         throw new ApolloError(
           "There is a task with same content,change your content..."
@@ -46,7 +47,8 @@ module.exports = {
 
       // if there is a task with same content, return error
       const isTaskExisted = await Task.findOne({ content: others.content });
-      if (isTaskExisted) throw new ApolloError("There is no task with the id");
+      if (isTaskExisted)
+        throw new ApolloError("There is a task with same content");
 
       // update task
       const updatedTask = await Task.findByIdAndUpdate(id, others, {

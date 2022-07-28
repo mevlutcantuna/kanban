@@ -4,7 +4,7 @@ const TaskSchema = new mongoose.Schema({
   content: {
     type: String,
     require: true,
-    unique: true,
+    unique: false,
   },
   user: {
     type: mongoose.Schema.ObjectId,

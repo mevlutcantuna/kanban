@@ -2,12 +2,13 @@ import { Button, Popover } from "antd";
 import { useState } from "react";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import UpdateIcon from "../assets/UpdateIcon";
+import { IColumn, ITask } from "../types";
 import ColumnButtonContent from "./ColumnButtonContent";
 import ColumnItem from "./ColumnItem";
 
 type IProps = {
-    column: any,
-    tasks: any,
+    column: IColumn,
+    tasks: ITask[],
     deleteTheCol: (id: string) => void
     updateColumnName: (id: string, name: string) => void
     updateTheTask: (content: string, tag: string, taskId: string) => void;
@@ -41,9 +42,8 @@ const Column: React.FC<IProps> = ({ column, tasks, deleteTheCol, updateColumnNam
                             <UpdateIcon color="#fff" />
                         </Button>
                     </Popover>
-
                 </div>
-                <Droppable droppableId={column.id}>
+                <Droppable droppableId={column.id as string}>
                     {(provided: any) => {
                         return (
                             <div

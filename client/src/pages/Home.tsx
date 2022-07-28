@@ -11,11 +11,14 @@ import { CREATE_COLUMN, DELETE_COLUMN, GET_ALL_COLUMNS, UPDATE_COLUMN } from "..
 import { CREATE_TASK, DELETE_TASK, GET_ALL_TASKS, UPDATE_TASK } from "../graphql/task";
 import { createKanbanState, errorMessage, isAuthanticated, reorderColumn, successMessage } from "../lib/utils";
 
+import { IState, ITask } from "../types";
+
+
 //import { initialData } from "../mock-data";
 //import { IColumn } from "../types";
 
 const Home = () => {
-  const [state, setState] = useState<any>({ tasks: {}, columns: {} });
+  const [state, setState] = useState<IState>({ tasks: {}, columns: {} });
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
@@ -286,8 +289,9 @@ const Home = () => {
     })
 
     // create new taks ids for dependent column
-    const deletedTask = deletedTaskRes.data.deleteTask
-    const newTaskIds = state.columns[deletedTask.columnId]["taskIds"].filter((id: string) => id !== deletedTask.id)
+    const deletedTask: ITask = deletedTaskRes.data.deleteTask
+    //@ts-ignore
+    const newTaskIds = state?.columns[deletedTask.columnId]["taskIds"].filter((id: string) => id !== deletedTask.id)
 
     // update the dependent column
     await updateCol({
@@ -386,7 +390,7 @@ const Home = () => {
     // if user drops in a different colums
 
     // startTaskIds means that remains from removed columns
-    const startTaskIds = Array.from(sourceCol.taskIds);
+    const startTaskIds = Array.from(sourceCol.taskIds as string[]);
     // removed means that id of dragged task 
     const [removed] = startTaskIds.splice(source.index, 1);
     // newStartCol means new values of dragged column 
@@ -396,7 +400,7 @@ const Home = () => {
     };
 
     // endTaskIds means task ids of dropped column
-    const endTaskIds = Array.from(destinationCol.taskIds);
+    const endTaskIds = Array.from(destinationCol.taskIds as string[]);
     endTaskIds.splice(destination.index, 0, removed);
     const newEndCol = {
       ...destinationCol,
@@ -408,8 +412,8 @@ const Home = () => {
       ...state,
       columns: {
         ...state.columns,
-        [newStartCol.id]: newStartCol,
-        [newEndCol.id]: newEndCol,
+        [newStartCol.id as string]: newStartCol,
+        [newEndCol.id as string]: newEndCol,
       },
     };
 
@@ -457,10 +461,10 @@ const Home = () => {
     if (allTaskQuery.data?.getAllTasks && allColQuery.data?.getAllColumns) {
       const kanbanState = createKanbanState(allTaskQuery.data?.getAllTasks, allColQuery.data?.getAllColumns);
       setState(kanbanState)
-      //console.log('worked')
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allTaskQuery.data?.getAllTasks[0].id, allColQuery.data?.getAllColumns[0].id])
+  }, [allTaskQuery.loading, allColQuery.loading]) // only works when page inits
+  console.log(state)
 
 
   useEffect(() => {
@@ -484,7 +488,6 @@ const Home = () => {
     }
   }, [navigate, error, token, allColQuery.error, allTaskQuery.error]);
 
-
   return (
     <>
       <Spin spinning={allColQuery.loading || allTaskQuery.loading || loading}>
@@ -496,13 +499,15 @@ const Home = () => {
                 <CreateButtons columns={allColQuery.data?.getAllColumns} createNewTask={createNewTask} createNewCol={createNewCol} />
               </div>
               <DragDropContext onDragEnd={onEndDrag}>
-                <div className="flex justify-between w-full max-w-[1000px] m-auto mt-4 overflow-auto">
-                  {Object.entries(state.columns)?.map(([columnId, column]: any) => {
-                    const tasks = column.taskIds.map(
-                      (taskId: string) => state.tasks[taskId]
-                    );
-                    return <Column deleteTheTask={deleteTheTask} updateTheTask={updateTheTask} updateColumnName={updateColumnName} deleteTheCol={deleteTheCol} key={columnId} column={column} tasks={tasks} />;
-                  })}
+                <div className="flex justify-between w-full max-w-[1000px] m-auto mt-4 overflow-x-auto overflow-y-none">
+                  {
+                    Object.entries(state.columns)?.map(([columnId, column]: any) => {
+                      const tasks = column.taskIds.map(
+                        (taskId: string) => state.tasks[taskId]
+                      );
+                      return <Column deleteTheTask={deleteTheTask} updateTheTask={updateTheTask} updateColumnName={updateColumnName} deleteTheCol={deleteTheCol} key={columnId} column={column} tasks={tasks} />;
+                    })
+                  }
                 </div>
               </DragDropContext>
             </div>

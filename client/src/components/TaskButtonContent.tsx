@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import DeleteIcon from '../assets/DeleteIcon'
 import UpdateIconSM from '../assets/UpdateIconSM'
+import { ITask } from '../types'
 import ItemModal from './ItemModal'
 
 type IProps = {
-    task: any;
+    task: ITask;
     hide: () => void;
     updateTheTask?: (content: string, tag: string, taskId: string) => void;
     deleteTheTask?: (taskId: string) => void;
@@ -27,7 +28,7 @@ const ButtonContent: React.FC<IProps> = ({ hide, deleteTheTask, task, updateTheT
     };
 
     const click = () => {
-        deleteTheTask?.(task?.id)
+        deleteTheTask?.(task?.id as string)
         setIsModalVisible(false)
     }
 

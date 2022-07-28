@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { IColumn } from "../types";
 import ColumnModal from "./ColumnModal";
 import ItemModal from "./ItemModal";
 
@@ -6,10 +7,11 @@ import ItemModal from "./ItemModal";
 type IProps = {
     createNewCol: (name: string) => void;
     createNewTask: (content: string, columnId: string, tag: string) => void;
-    columns: any
+    columns: IColumn[]
 }
 
 const CreateButtons: React.FC<IProps> = ({ createNewCol, createNewTask, columns }) => {
+    console.log(columns)
     const [isTaskModalVisible, setIsTaskModalVisible] = useState<boolean>(false);
     const [isColumnModalVisible, setIsColumnModalVisible] =
         useState<boolean>(false);

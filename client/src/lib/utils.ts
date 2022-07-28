@@ -1,4 +1,5 @@
 import { message } from "antd";
+import { IColumn, ITask } from "../types";
 
 export const reorderColumn = (
   sourceCol: any,
@@ -40,16 +41,17 @@ export const generateUserLogo = (name: string) => {
   return letters;
 };
 
-export const createKanbanState = (tasks: any, columns: any) => {
+export const createKanbanState = (tasks: ITask[], columns: IColumn[]) => {
+  console.log(tasks, columns);
   let newTasks: any = {};
   let newColumns: any = {};
 
   for (let i = 0; i < tasks?.length; i++) {
-    newTasks[tasks[i].id] = tasks[i];
+    newTasks[tasks[i].id as string] = tasks[i];
   }
 
   for (let i = 0; i < columns?.length; i++) {
-    newColumns[columns[i].id] = columns[i];
+    newColumns[columns[i].id as string] = columns[i];
   }
 
   const kanbanState = {

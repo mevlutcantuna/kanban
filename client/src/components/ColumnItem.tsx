@@ -3,9 +3,10 @@ import React, { useState } from "react";
 import UpdateIcon from "../assets/UpdateIcon";
 import { Button, Popover } from "antd";
 import TaskButtonContent from "./TaskButtonContent";
+import { ITask } from "../types";
 
 type IProps = {
-    task: any;
+    task: ITask;
     innerRef: any;
     updateTheTask: (content: string, tag: string, taskId: string) => void;
     deleteTheTask: (taskId: string) => void

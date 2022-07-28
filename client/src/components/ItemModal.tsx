@@ -2,6 +2,7 @@ import Modal from "antd/lib/modal/Modal";
 import React, { memo, useState } from "react";
 import { useEffect } from "react";
 import { errorMessage } from "../lib/utils";
+import { IColumn, ITask } from "../types";
 
 type IProps = {
     visible: boolean;
@@ -11,8 +12,8 @@ type IProps = {
     title: string;
     createNewTask?: (content: string, columnId: string, tag: string) => void;
     updateTheTask?: (content: string, tag: string, taskId: string) => void;
-    columns?: any
-    task?: any
+    columns?: IColumn[]
+    task?: ITask
 };
 
 const ItemModal: React.FC<IProps> = ({
@@ -61,7 +62,7 @@ const ItemModal: React.FC<IProps> = ({
             }
 
         } else {
-            const res = await updateTheTask?.(content, tag, task?.id)
+            const res = await updateTheTask?.(content, tag, task?.id as string)
             if (res) {
                 return onCancel()
             }
@@ -71,8 +72,8 @@ const ItemModal: React.FC<IProps> = ({
 
     useEffect(() => {
         if (title === "Update the task") {
-            setContent(task?.content)
-            setTag(task?.tag)
+            setContent(task?.content as string)
+            setTag(task?.tag as string)
         }
     }, [task?.content, task?.tag, title])
 

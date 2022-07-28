@@ -1,11 +1,9 @@
 import Modal from "antd/lib/modal/Modal";
 import React, { useEffect, useState } from "react";
+import { IColumn } from "../types";
 
 type IProps = {
-    column?: {
-        name: string,
-        id: string
-    };
+    column?: IColumn;
     visible: boolean;
     footer: null;
     onOk: () => void;
@@ -41,7 +39,7 @@ const ColumnModal: React.FC<IProps> = ({
                 return setName("")
             }
         } else {
-            const res = await updateCol?.(column ? column.id : '', name)
+            const res = await updateCol?.(column ? column.id as string : '', name)
             if (res) {
                 return onCancel()
             }
