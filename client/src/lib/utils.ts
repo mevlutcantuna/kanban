@@ -42,7 +42,6 @@ export const generateUserLogo = (name: string) => {
 };
 
 export const createKanbanState = (tasks: ITask[], columns: IColumn[]) => {
-  console.log(tasks, columns);
   let newTasks: any = {};
   let newColumns: any = {};
 

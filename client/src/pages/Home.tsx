@@ -464,7 +464,6 @@ const Home = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allTaskQuery.loading, allColQuery.loading]) // only works when page inits
-  console.log(state)
 
 
   useEffect(() => {

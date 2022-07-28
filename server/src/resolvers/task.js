@@ -46,7 +46,10 @@ module.exports = {
       if (!task) throw new ApolloError("There is no task with the id");
 
       // if there is a task with same content, return error
-      const isTaskExisted = await Task.findOne({ content: others.content });
+      const isTaskExisted = await Task.findOne({
+        content: others.content,
+        user: task.user,
+      });
       if (isTaskExisted)
         throw new ApolloError("There is a task with same content");
 

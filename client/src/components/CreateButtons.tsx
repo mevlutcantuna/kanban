@@ -11,7 +11,6 @@ type IProps = {
 }
 
 const CreateButtons: React.FC<IProps> = ({ createNewCol, createNewTask, columns }) => {
-    console.log(columns)
     const [isTaskModalVisible, setIsTaskModalVisible] = useState<boolean>(false);
     const [isColumnModalVisible, setIsColumnModalVisible] =
         useState<boolean>(false);
