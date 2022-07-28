@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { REGISTER } from "../graphql/auth";
 import { errorMessage, isAuthanticated, successMessage } from "../lib/utils";
 import { Spin } from "antd";
-import { CREATE_COLUMN } from "../graphql/column";
 
 const Signup = () => {
   const [inputs, setInputs] = useState<any>({ fullName: "", email: "", password: "" })
@@ -16,8 +15,6 @@ const Signup = () => {
 
   const [register, { loading, error }] = useMutation(REGISTER)
 
-  const [createCol] = useMutation(CREATE_COLUMN)
-
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -27,31 +24,12 @@ const Signup = () => {
     }
 
     // register
-    const userRes = await register({
+    await register({
       variables: {
         "user": {
           "fullName": inputs.fullName,
           "email": inputs.email,
           "password": inputs.password
-        }
-      }
-    })
-    console.log(userRes.data.register.id)
-    // create default column and tasks
-    await createCol({
-      variables: {
-        column: {
-          name: "First Column",
-          userId: userRes.data.register.id,
-        }
-      }
-    })
-
-    await createCol({
-      variables: {
-        column: {
-          name: "Second Column",
-          userId: userRes.data.register.id,
         }
       }
     })

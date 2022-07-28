@@ -47,7 +47,7 @@ const Column: React.FC<IProps> = ({ column, tasks, deleteTheCol, updateColumnNam
                     {(provided: any) => {
                         return (
                             <div
-                                className="w-full h-full"
+                                className="w-full min-h-[6rem]"
                                 ref={provided.innerRef}
                                 {...provided.droppableProps}
                             >

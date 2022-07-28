@@ -1,4 +1,5 @@
 const User = require("../models/user.model");
+const Column = require("../models/column.model");
 const { ApolloError } = require("apollo-server-errors");
 const { createToken, verifyToken } = require("../../utils/");
 
@@ -31,6 +32,14 @@ module.exports = {
 
       // save user
       await user.save();
+
+      // create default columns
+      const newCol1 = new Column({ name: "First Column", user: user.id });
+      const newCol2 = new Column({ name: "Second Column", user: user.id });
+
+      await newCol1.save();
+      await newCol2.save();
+
       return user;
     },
 

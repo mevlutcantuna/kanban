@@ -498,7 +498,7 @@ const Home = () => {
                 <CreateButtons columns={allColQuery.data?.getAllColumns} createNewTask={createNewTask} createNewCol={createNewCol} />
               </div>
               <DragDropContext onDragEnd={onEndDrag}>
-                <div className="flex justify-between w-full max-w-[1000px] m-auto mt-4 overflow-x-auto overflow-y-none">
+                <div className="flex justify-between w-full max-w-[1000px] m-auto mt-4 overflow-x-auto overflow-y-visible">
                   {
                     Object.entries(state.columns)?.map(([columnId, column]: any) => {
                       const tasks = column.taskIds.map(
