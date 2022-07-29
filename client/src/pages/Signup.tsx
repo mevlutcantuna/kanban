@@ -13,14 +13,18 @@ const Signup = () => {
     setInputs({ ...inputs, [e.target.name]: e.target.value })
   }
 
-  const [register, { loading, error }] = useMutation(REGISTER)
+  const [register, { loading }] = useMutation(REGISTER, {
+    onError(err) {
+      return errorMessage(err.message)
+    }
+  })
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     // check inputs are not empty
     if (inputs.fullName === '' || inputs.email === '' || inputs.password === '') {
-      return alert('Please fill in all fields');
+      return errorMessage('Please fill in all fields');
     }
 
     // register
@@ -40,20 +44,16 @@ const Signup = () => {
   }
 
   useEffect(() => {
-    if (error) {
-      errorMessage(error.message)
-    }
-
     if (isAuthanticated()) {
       navigate("/", { replace: true });
     }
-  }, [error, navigate])
+  }, [navigate])
 
   return (
     <Spin spinning={loading} >
       <div className="w-screen h-screen pt-40 flex justify-center bg-lightBlack">
         <div className="w-full max-w-sm h-80 flex flex-col items-center">
-          <h1 className="text-gray-300 text-3xl">Sign Up</h1>
+          <h1 data-testid='header' className="text-gray-300 text-3xl">Sign Up</h1>
           <form onSubmit={submit} className="w-full flex flex-col mt-10">
             <input
               value={inputs.fullName}

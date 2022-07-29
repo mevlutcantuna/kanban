@@ -1,4 +1,4 @@
-import { LOGIN } from "../graphql/auth";
+import { LOGIN, REGISTER } from "../graphql/auth";
 
 export const loginError: any = {
   request: {
@@ -31,6 +31,43 @@ export const loginSuccess: any = {
         email: "mock@gmail.com",
         password: "123123",
         token: "token",
+      },
+    },
+  },
+};
+
+export const signupError: any = {
+  request: {
+    query: REGISTER,
+    variables: {
+      user: {
+        fullName: "Demo Demo",
+        email: "existsuser@gmail.com",
+        password: "123123",
+      },
+    },
+  },
+  error: new Error("The user exists..."),
+};
+
+export const signupSuccess = {
+  request: {
+    query: REGISTER,
+    variables: {
+      user: {
+        fullName: "Demo Demo",
+        email: "user@gmail.com",
+        password: "123123",
+      },
+    },
+  },
+  result: {
+    data: {
+      register: {
+        id: "1",
+        fullName: "Demo Demo",
+        email: "user@gmail.com",
+        password: "123123",
       },
     },
   },

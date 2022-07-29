@@ -49,7 +49,7 @@ describe("login page tests", () => {
         expect(await screen.findByText(/user does not found.../i)).toBeInTheDocument()
     })
 
-    it.only('should login correctly', async () => {
+    it('should login correctly', async () => {
         setup()
         userEvent.type(screen.getByPlaceholderText(/email/i), 'mock@gmail.com')
         userEvent.type(screen.getByPlaceholderText(/password/i), '123123')
