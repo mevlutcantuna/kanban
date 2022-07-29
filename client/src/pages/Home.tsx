@@ -489,7 +489,7 @@ const Home = () => {
 
   return (
     <>
-      <Spin spinning={allColQuery.loading || allTaskQuery.loading || loading}>
+      <Spin data-testid="loading" spinning={allColQuery.loading || allTaskQuery.loading || loading}>
         {data &&
           <div className="w-screen h-screen bg-lightBlack">
             <div>
