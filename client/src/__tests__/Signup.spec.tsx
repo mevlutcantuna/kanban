@@ -2,10 +2,10 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Signup from "../pages/Signup";
 import { MockedProvider } from "@apollo/client/testing";
-import { signupError } from "../mock-graphql";
+import { signupError, signupSuccess } from "../mock-graphql/auth";
 import { BrowserRouter } from "react-router-dom";
 
-const mocks: any[] = [signupError];
+const mocks: any[] = [signupError, signupSuccess];
 
 const setup = () => (
     render(

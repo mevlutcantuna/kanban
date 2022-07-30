@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import Login from "../pages/Login";
 import { MockedProvider } from "@apollo/client/testing"
 
-import { loginError, loginSuccess } from "../mock-graphql";
+import { loginError, loginSuccess } from "../mock-graphql/auth";
 
 const setup = () =>
     render(
