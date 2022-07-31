@@ -1,5 +1,6 @@
 import {
   CREATE_COLUMN,
+  DELETE_COLUMN,
   GET_ALL_COLUMNS,
   UPDATE_COLUMN,
 } from "../graphql/column";
@@ -91,6 +92,34 @@ export const updateColumnSuccess = {
   },
 };
 
-export const updateColumnError = {};
+export const updateColumnError = {
+  request: {
+    query: UPDATE_COLUMN,
+    variables: {
+      column: {
+        id: "column-1",
+        name: "In progress",
+      },
+    },
+  },
+  error: new Error("There is a column with same name..."),
+};
 
-export const deleteColumn = {};
+export const deleteColumn = {
+  request: {
+    query: DELETE_COLUMN,
+    variables: {
+      deleteColumnId: "column-1",
+    },
+  },
+  result: {
+    data: {
+      deleteColumn: {
+        name: "To do",
+        id: "column-1",
+        taskIds: ["1", "2"],
+        user: "1",
+      },
+    },
+  },
+};

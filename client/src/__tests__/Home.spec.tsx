@@ -1,13 +1,13 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitForElementToBeRemoved } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
 import Home from "../pages/Home";
-import { createColumnError, createColumnSuccess, getAllColumns, updateColumnSuccess, } from "../mock-graphql/column";
+import { createColumnError, createColumnSuccess, deleteColumn, getAllColumns, updateColumnError, updateColumnSuccess, } from "../mock-graphql/column";
 import { getUser } from "../mock-graphql/auth";
 import { getAllTasks } from '../mock-graphql/task'
 
-const mocks: any[] = [getUser, getAllColumns, getAllTasks, createColumnSuccess, createColumnError, updateColumnSuccess];
+const mocks: any[] = [getUser, getAllColumns, getAllTasks, createColumnSuccess, createColumnError, updateColumnSuccess, updateColumnError, deleteColumn];
 
 const setup = () => {
     render(
@@ -100,9 +100,51 @@ describe("home page", () => {
         expect(await screen.findByText(updatedColumnName)).toBeInTheDocument()
     })
 
+    it('should return errır message,if input is empty', async () => {
+        setup()
+        // open popover of the first column
+        const colSettingsBtns = await screen.findAllByTestId('col-setting-icon')
+        userEvent.click(colSettingsBtns[0])
 
-    it('should return error message, while updating the column with name of a existing column', async () => { })
+        // open update column modal
+        const updateBtnOfColumn = await screen.findByText('Update')
+        userEvent.click(updateBtnOfColumn)
+        expect(await screen.findByText(/Update the column/i)).toBeInTheDocument()
 
+        // clear input and submit
+        userEvent.clear(screen.getByPlaceholderText('Enter Column Name'))
+        userEvent.click(screen.getByRole('button', { name: /submit/i }))
+        expect(await screen.findByText(/Please provide the name.../i)).toBeInTheDocument()
+    })
 
-    it('should delete the column correctly', async () => { })
+    it('should return error message, while updating the column with name of a existing column', async () => {
+        setup()
+        // open popover of the first column
+        const colSettingsBtns = await screen.findAllByTestId('col-setting-icon')
+        userEvent.click(colSettingsBtns[0])
+
+        // open update column modal
+        const updateBtnOfColumn = await screen.findByText('Update')
+        userEvent.click(updateBtnOfColumn)
+
+        // fill the form and submit
+        const updatedColumnName = 'In progress'
+        userEvent.clear(screen.getByPlaceholderText('Enter Column Name'))
+        userEvent.type(screen.getByPlaceholderText('Enter Column Name'), updatedColumnName)
+        userEvent.click(screen.getByRole('button', { name: /submit/i }))
+
+        expect(await screen.findByText(/There is a column with same name.../i)).toBeInTheDocument()
+
+    })
+
+    it('should delete the column correctly', async () => {
+        setup()
+        // open popover
+        const colSettingsBtns = await screen.findAllByTestId('col-setting-icon')
+        userEvent.click(colSettingsBtns[0])
+
+        userEvent.click(screen.getByText(/delete/i))
+        await waitForElementToBeRemoved(() => screen.queryByText(/to do/i))
+        expect(await screen.findByText(/deleted the column/i)).toBeInTheDocument()
+    })
 });

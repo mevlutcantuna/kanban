@@ -95,6 +95,7 @@ const Home = () => {
       }
     });
 
+
     const newColumns = Object.fromEntries(
       Object.entries(state.columns).filter((column: any) => column[0] !== colRes.data.deleteColumn.id)
     )
