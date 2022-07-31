@@ -20,7 +20,7 @@ const setup = () => {
 };
 
 describe("home page", () => {
-    it("should render, initial values", async () => {
+    it("should render,get initial values correctly", async () => {
         setup();
 
         expect(await screen.findByTestId(/loading/i)).toBeInTheDocument();
@@ -34,117 +34,131 @@ describe("home page", () => {
         // check initial tasks
         expect(await screen.findByText(/Take out the garbage/i)).toBeInTheDocument()
         expect(await screen.findByText(/Watch my favorite show/i)).toBeInTheDocument()
-    });
-
-    it('should create a new column correctly', async () => {
-        setup()
-
-        // open create column modal
-        const createBtn = await screen.findByRole('button', { name: /create column/i })
-        expect(createBtn).toBeInTheDocument()
-        userEvent.click(createBtn)
-
-        // fill form and submit
-        const newColName = "New Col 44"
-        userEvent.type(await screen.findByPlaceholderText('Enter Column Name'), newColName)
-        userEvent.click(await screen.findByRole('button', { name: /submit/i }))
-        expect(await screen.findByText(newColName)).toBeInTheDocument()
     })
 
-    it('should return error,if create column form item is empty', async () => {
-        setup()
+    describe('column tests', () => {
+        it('should create a new column correctly', async () => {
+            setup()
 
-        const createBtn = await screen.findByRole('button', { name: /create column/i })
-        userEvent.click(createBtn)
+            // open create column modal
+            const createBtn = await screen.findByRole('button', { name: /create column/i })
+            expect(createBtn).toBeInTheDocument()
+            userEvent.click(createBtn)
 
-        userEvent.click(await screen.findByRole('button', { name: /submit/i }))
+            // fill form and submit
+            const newColName = "New Col 44"
+            userEvent.type(await screen.findByPlaceholderText('Enter Column Name'), newColName)
+            userEvent.click(await screen.findByRole('button', { name: /submit/i }))
+            expect(await screen.findByText(newColName)).toBeInTheDocument()
+        })
 
-        expect(await screen.findByText(/Please provide the text../i)).toBeInTheDocument()
+        it('should return error,if create column form item is empty', async () => {
+            setup()
+
+            const createBtn = await screen.findByRole('button', { name: /create column/i })
+            userEvent.click(createBtn)
+
+            userEvent.click(await screen.findByRole('button', { name: /submit/i }))
+
+            expect(await screen.findByText(/Please provide the text../i)).toBeInTheDocument()
+        })
+
+        it('should return error,if there is a column with same column name', async () => {
+            setup()
+
+            // open create column modal
+            const createBtn = await screen.findByRole('button', { name: /create column/i })
+            userEvent.click(createBtn)
+
+            // fill form and submit
+            const newColName = "To do"
+            userEvent.type(await screen.findByPlaceholderText('Enter Column Name'), newColName)
+            userEvent.click(await screen.findByRole('button', { name: /submit/i }))
+
+            // check error
+            expect(await screen.findByText("You have the same name of a column...")).toBeInTheDocument()
+        })
+
+        it('should update the column correctly', async () => {
+            setup()
+            // open popover of the first column
+            const colSettingsBtns = await screen.findAllByTestId('col-setting-icon')
+            expect(colSettingsBtns[0]).toBeInTheDocument()
+            userEvent.click(colSettingsBtns[0])
+
+            // open update column modal
+            const updateBtnOfColumn = await screen.findByText('Update')
+            expect(updateBtnOfColumn).toBeInTheDocument()
+            userEvent.click(updateBtnOfColumn)
+            expect(await screen.findByText(/Update the column/i)).toBeInTheDocument()
+
+            // fill the form and submit
+            const updatedColumnName = 'Updated To do'
+            userEvent.clear(screen.getByPlaceholderText('Enter Column Name'))
+            userEvent.type(screen.getByPlaceholderText('Enter Column Name'), updatedColumnName)
+
+            userEvent.click(screen.getByRole('button', { name: /submit/i }))
+            expect(await screen.findByText(updatedColumnName)).toBeInTheDocument()
+        })
+
+        it('should return error message,if update form item is empty', async () => {
+            setup()
+            // open popover of the first column
+            const colSettingsBtns = await screen.findAllByTestId('col-setting-icon')
+            userEvent.click(colSettingsBtns[0])
+
+            // open update column modal
+            const updateBtnOfColumn = await screen.findByText('Update')
+            userEvent.click(updateBtnOfColumn)
+            expect(await screen.findByText(/Update the column/i)).toBeInTheDocument()
+
+            // clear input and submit
+            userEvent.clear(screen.getByPlaceholderText('Enter Column Name'))
+            userEvent.click(screen.getByRole('button', { name: /submit/i }))
+            expect(await screen.findByText(/Please provide the name.../i)).toBeInTheDocument()
+        })
+
+        it('should return error message, while updating the column with name of a existing column', async () => {
+            setup()
+            // open popover of the first column
+            const colSettingsBtns = await screen.findAllByTestId('col-setting-icon')
+            userEvent.click(colSettingsBtns[0])
+
+            // open update column modal
+            const updateBtnOfColumn = await screen.findByText('Update')
+            userEvent.click(updateBtnOfColumn)
+
+            // fill the form and submit
+            const updatedColumnName = 'In progress'
+            userEvent.clear(screen.getByPlaceholderText('Enter Column Name'))
+            userEvent.type(screen.getByPlaceholderText('Enter Column Name'), updatedColumnName)
+            userEvent.click(screen.getByRole('button', { name: /submit/i }))
+
+            expect(await screen.findByText(/There is a column with same name.../i)).toBeInTheDocument()
+
+        })
+
+        it('should delete the column correctly', async () => {
+            setup()
+            // open popover
+            const colSettingsBtns = await screen.findAllByTestId('col-setting-icon')
+            userEvent.click(colSettingsBtns[0])
+
+            userEvent.click(screen.getByText(/delete/i))
+            await waitForElementToBeRemoved(() => screen.queryByText(/to do/i))
+            expect(await screen.findByText(/deleted the column/i)).toBeInTheDocument()
+        })
+
     })
 
-    it('should return error,if there is a column with same column name', async () => {
-        setup()
+    describe('task tests', () => {
+        it('should create a new task correctly', async () => { })
 
-        // open create column modal
-        const createBtn = await screen.findByRole('button', { name: /create column/i })
-        userEvent.click(createBtn)
+        it('should return error message,if the create task input is empty', async () => { })
 
-        // fill form and submit
-        const newColName = "To do"
-        userEvent.type(await screen.findByPlaceholderText('Enter Column Name'), newColName)
-        userEvent.click(await screen.findByRole('button', { name: /submit/i }))
-
-        // check error
-        expect(await screen.findByText("You have the same name of a column...")).toBeInTheDocument()
-    })
-
-    it('should update the column correctly', async () => {
-        setup()
-        // open popover of the first column
-        const colSettingsBtns = await screen.findAllByTestId('col-setting-icon')
-        expect(colSettingsBtns[0]).toBeInTheDocument()
-        userEvent.click(colSettingsBtns[0])
-
-        // open update column modal
-        const updateBtnOfColumn = await screen.findByText('Update')
-        expect(updateBtnOfColumn).toBeInTheDocument()
-        userEvent.click(updateBtnOfColumn)
-        expect(await screen.findByText(/Update the column/i)).toBeInTheDocument()
-
-        // fill the form and submit
-        const updatedColumnName = 'Updated To do'
-        userEvent.clear(screen.getByPlaceholderText('Enter Column Name'))
-        userEvent.type(screen.getByPlaceholderText('Enter Column Name'), updatedColumnName)
-
-        userEvent.click(screen.getByRole('button', { name: /submit/i }))
-        expect(await screen.findByText(updatedColumnName)).toBeInTheDocument()
-    })
-
-    it('should return errır message,if input is empty', async () => {
-        setup()
-        // open popover of the first column
-        const colSettingsBtns = await screen.findAllByTestId('col-setting-icon')
-        userEvent.click(colSettingsBtns[0])
-
-        // open update column modal
-        const updateBtnOfColumn = await screen.findByText('Update')
-        userEvent.click(updateBtnOfColumn)
-        expect(await screen.findByText(/Update the column/i)).toBeInTheDocument()
-
-        // clear input and submit
-        userEvent.clear(screen.getByPlaceholderText('Enter Column Name'))
-        userEvent.click(screen.getByRole('button', { name: /submit/i }))
-        expect(await screen.findByText(/Please provide the name.../i)).toBeInTheDocument()
-    })
-
-    it('should return error message, while updating the column with name of a existing column', async () => {
-        setup()
-        // open popover of the first column
-        const colSettingsBtns = await screen.findAllByTestId('col-setting-icon')
-        userEvent.click(colSettingsBtns[0])
-
-        // open update column modal
-        const updateBtnOfColumn = await screen.findByText('Update')
-        userEvent.click(updateBtnOfColumn)
-
-        // fill the form and submit
-        const updatedColumnName = 'In progress'
-        userEvent.clear(screen.getByPlaceholderText('Enter Column Name'))
-        userEvent.type(screen.getByPlaceholderText('Enter Column Name'), updatedColumnName)
-        userEvent.click(screen.getByRole('button', { name: /submit/i }))
-
-        expect(await screen.findByText(/There is a column with same name.../i)).toBeInTheDocument()
+        it('should return error message,if there is a task with same name', async () => { })
 
     })
 
-    it('should delete the column correctly', async () => {
-        setup()
-        // open popover
-        const colSettingsBtns = await screen.findAllByTestId('col-setting-icon')
-        userEvent.click(colSettingsBtns[0])
 
-        userEvent.click(screen.getByText(/delete/i))
-        await waitForElementToBeRemoved(() => screen.queryByText(/to do/i))
-        expect(await screen.findByText(/deleted the column/i)).toBeInTheDocument()
-    })
 });
