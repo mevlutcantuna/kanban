@@ -38,7 +38,7 @@ const Column: React.FC<IProps> = ({ column, tasks, deleteTheCol, updateColumnNam
                         placement="bottom"
                         trigger="click"
                     >
-                        <Button type="text">
+                        <Button data-testid='col-setting-icon' type="text">
                             <UpdateIcon color="#fff" />
                         </Button>
                     </Popover>

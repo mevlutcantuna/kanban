@@ -1,4 +1,8 @@
-import { CREATE_COLUMN, GET_ALL_COLUMNS } from "../graphql/column";
+import {
+  CREATE_COLUMN,
+  GET_ALL_COLUMNS,
+  UPDATE_COLUMN,
+} from "../graphql/column";
 
 export const getAllColumns = {
   request: {
@@ -64,3 +68,29 @@ export const createColumnError = {
   },
   error: new Error("You have the same name of a column..."),
 };
+
+export const updateColumnSuccess = {
+  request: {
+    query: UPDATE_COLUMN,
+    variables: {
+      column: {
+        id: "column-1",
+        name: "Updated To do",
+      },
+    },
+  },
+  result: {
+    data: {
+      updateColumn: {
+        id: "column-1",
+        name: "Updated To do",
+        taskIds: ["1", "2"],
+        user: "1",
+      },
+    },
+  },
+};
+
+export const updateColumnError = {};
+
+export const deleteColumn = {};

@@ -3,11 +3,11 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
 import Home from "../pages/Home";
-import { createColumnError, createColumnSuccess, getAllColumns, } from "../mock-graphql/column";
+import { createColumnError, createColumnSuccess, getAllColumns, updateColumnSuccess, } from "../mock-graphql/column";
 import { getUser } from "../mock-graphql/auth";
 import { getAllTasks } from '../mock-graphql/task'
 
-const mocks: any[] = [getUser, getAllColumns, getAllTasks, createColumnSuccess, createColumnError];
+const mocks: any[] = [getUser, getAllColumns, getAllTasks, createColumnSuccess, createColumnError, updateColumnSuccess];
 
 const setup = () => {
     render(
@@ -78,4 +78,31 @@ describe("home page", () => {
         expect(await screen.findByText("You have the same name of a column...")).toBeInTheDocument()
     })
 
+    it('should update the column correctly', async () => {
+        setup()
+        // open popover of the first column
+        const colSettingsBtns = await screen.findAllByTestId('col-setting-icon')
+        expect(colSettingsBtns[0]).toBeInTheDocument()
+        userEvent.click(colSettingsBtns[0])
+
+        // open update column modal
+        const updateBtnOfColumn = await screen.findByText('Update')
+        expect(updateBtnOfColumn).toBeInTheDocument()
+        userEvent.click(updateBtnOfColumn)
+        expect(await screen.findByText(/Update the column/i)).toBeInTheDocument()
+
+        // fill the form and submit
+        const updatedColumnName = 'Updated To do'
+        userEvent.clear(screen.getByPlaceholderText('Enter Column Name'))
+        userEvent.type(screen.getByPlaceholderText('Enter Column Name'), updatedColumnName)
+
+        userEvent.click(screen.getByRole('button', { name: /submit/i }))
+        expect(await screen.findByText(updatedColumnName)).toBeInTheDocument()
+    })
+
+
+    it('should return error message, while updating the column with name of a existing column', async () => { })
+
+
+    it('should delete the column correctly', async () => { })
 });
