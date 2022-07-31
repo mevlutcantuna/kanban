@@ -485,6 +485,7 @@ const Home = () => {
   }, [navigate, error, token, allColQuery.error, allTaskQuery.error]);
 
   useEffect(() => {
+    // when state change, update getallquery.data
     if (data?.getUser) {
       allColQuery.refetch()
       allTaskQuery.refetch()

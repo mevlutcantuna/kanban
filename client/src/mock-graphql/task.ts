@@ -1,4 +1,4 @@
-import { GET_ALL_TASKS } from "../graphql/task";
+import { CREATE_TASK, GET_ALL_TASKS } from "../graphql/task";
 
 export const getAllTasks = {
   request: {
@@ -25,6 +25,31 @@ export const getAllTasks = {
           user: "1",
         },
       ],
+    },
+  },
+};
+
+export const createTaskSuccess = {
+  request: {
+    query: CREATE_TASK,
+    variables: {
+      task: {
+        content: "New Task 44",
+        columnId: "column-2",
+        tag: "High",
+        userId: "1",
+      },
+    },
+  },
+  result: {
+    data: {
+      createTask: {
+        id: "3",
+        content: "New Task 44",
+        user: "1",
+        columnId: "column-2",
+        tag: "High",
+      },
     },
   },
 };

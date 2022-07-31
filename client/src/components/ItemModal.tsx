@@ -43,7 +43,6 @@ const ItemModal: React.FC<IProps> = ({
         setColumn(e.target.value)
     }
 
-
     const click = async () => {
         if (content === "" || tag === "") {
             return errorMessage('Please provide all inputs...')
@@ -94,14 +93,14 @@ const ItemModal: React.FC<IProps> = ({
                 className="bg-transparent w-full border-solid border-[1px] border-black rounded p-2 mt-4 text-black placeholder:text-slate-600"
                 placeholder="Enter Task"
             />
-            <select value={tag} onChange={handleTagChange} className="bg-transparent w-full border-solid border-[1px] border-black rounded p-2 mt-4 text-black">
+            <select placeholder="Choose Tag" value={tag} onChange={handleTagChange} className="bg-transparent w-full border-solid border-[1px] border-black rounded p-2 mt-4 text-black">
                 <option hidden>Choose Tag</option>
                 <option value='Low'>Low</option>
                 <option value='Medium'>Medium</option>
                 <option value='High'>High</option>
             </select>
             {title === 'Create a new task' &&
-                <select value={column} onChange={handleColumnChange} className="bg-transparent w-full border-solid border-[1px] border-black rounded p-2 mt-4 text-black">
+                <select placeholder="Choose Column" value={column} onChange={handleColumnChange} className="bg-transparent w-full border-solid border-[1px] border-black rounded p-2 mt-4 text-black">
                     <option hidden>Choose Column</option>
                     {
                         columns?.map((col: any) => (

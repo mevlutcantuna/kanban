@@ -5,9 +5,9 @@ import { BrowserRouter } from "react-router-dom";
 import Home from "../pages/Home";
 import { createColumnError, createColumnSuccess, deleteColumn, getAllColumns, updateColumnError, updateColumnSuccess, } from "../mock-graphql/column";
 import { getUser } from "../mock-graphql/auth";
-import { getAllTasks } from '../mock-graphql/task'
+import { createTaskSuccess, getAllTasks } from '../mock-graphql/task'
 
-const mocks: any[] = [getUser, getAllColumns, getAllTasks, createColumnSuccess, createColumnError, updateColumnSuccess, updateColumnError, deleteColumn];
+const mocks: any[] = [getUser, getAllColumns, getAllTasks, createColumnSuccess, createColumnError, updateColumnSuccess, updateColumnError, deleteColumn, createTaskSuccess];
 
 const setup = () => {
     render(
@@ -152,13 +152,29 @@ describe("home page", () => {
     })
 
     describe('task tests', () => {
-        it('should create a new task correctly', async () => { })
+        it.only('should create a new task correctly', async () => {
+            setup()
 
-        it('should return error message,if the create task input is empty', async () => { })
+            // wait for getting initial values
+            expect(await screen.findByText(/Take out the garbage/i)).toBeInTheDocument()
 
-        it('should return error message,if there is a task with same name', async () => { })
+            // open create task modal
+            userEvent.click(await screen.findByText(/create task/i))
+            expect(screen.getByText(/Create a new task/i)).toBeInTheDocument()
+
+            // fill the form and submit
+            const newTask = 'New Task 44'
+            userEvent.type(screen.getByPlaceholderText(/Enter Task/i), newTask)
+            userEvent.selectOptions(screen.getByPlaceholderText(/Choose Tag/), 'High')
+            userEvent.selectOptions(await screen.findByPlaceholderText(/Choose Column/), 'column-2')
+            userEvent.click(screen.getByRole('button', { name: /submit/i }))
+
+            expect(await screen.findByText(newTask)).toBeInTheDocument()
+        })
+
+        //it('should return error message,if the create task input is empty', async () => { })
+
+        //it('should return error message,if there is a task with same name', async () => { })
 
     })
-
-
 });
