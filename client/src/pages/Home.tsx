@@ -13,10 +13,6 @@ import { createKanbanState, errorMessage, isAuthanticated, reorderColumn, succes
 
 import { IState, ITask } from "../types";
 
-
-//import { initialData } from "../mock-data";
-//import { IColumn } from "../types";
-
 const Home = () => {
   const [state, setState] = useState<IState>({ tasks: {}, columns: {} });
   const navigate = useNavigate();
@@ -487,6 +483,13 @@ const Home = () => {
       return errorMessage(allTaskQuery.error.message)
     }
   }, [navigate, error, token, allColQuery.error, allTaskQuery.error]);
+
+  useEffect(() => {
+    if (data?.getUser) {
+      allColQuery.refetch()
+      allTaskQuery.refetch()
+    }
+  }, [allColQuery, allTaskQuery, data?.getUser, state])
 
   return (
     <>

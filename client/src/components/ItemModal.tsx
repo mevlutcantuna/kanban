@@ -13,7 +13,7 @@ type IProps = {
     createNewTask?: (content: string, columnId: string, tag: string) => void;
     updateTheTask?: (content: string, tag: string, taskId: string) => void;
     columns?: IColumn[]
-    task?: ITask
+    task?: ITask,
 };
 
 const ItemModal: React.FC<IProps> = ({
@@ -25,7 +25,7 @@ const ItemModal: React.FC<IProps> = ({
     columns,
     createNewTask,
     updateTheTask,
-    task
+    task,
 }) => {
     const [content, setContent] = useState("");
     const [tag, setTag] = useState<string>("");
