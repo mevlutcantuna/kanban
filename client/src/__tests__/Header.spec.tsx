@@ -2,7 +2,6 @@ import { render, screen } from "@testing-library/react"
 import { BrowserRouter } from "react-router-dom"
 import Header from "../components/Header"
 
-
 const setup = () => {
     const props = {
         fullName: "Joe Doe", id: "1", email: "joe@gmail.com", password: "123123"
