@@ -182,6 +182,10 @@ const Home = () => {
 
   // create new task
   const createNewTask = async (content: string, tag: string, columnId: string,) => {
+    if (content === "" || tag === "" || columnId === "") {
+      return errorMessage('Please provide all inputs...')
+    }
+
     // create task in db
     const newTaskRes = await createTask({
       variables: {
@@ -198,7 +202,7 @@ const Home = () => {
     })
 
     // create new task object
-    const newTask = { [newTaskRes.data.createTask.id]: newTaskRes.data.createTask }
+    const newTask = { [newTaskRes.data?.createTask.id]: newTaskRes.data?.createTask }
 
     // update tasks
     const newTasks = { ...state.tasks, ...newTask }
@@ -206,8 +210,8 @@ const Home = () => {
     // update the columns
     const newColumns = Object.fromEntries(
       Object.entries(state.columns).map((col: any) => {
-        if (col[0] === newTaskRes.data.createTask.columnId) {
-          const newTaskIds = [...col[1].taskIds, newTaskRes.data.createTask.id]
+        if (col[0] === newTaskRes.data?.createTask.columnId) {
+          const newTaskIds = [...col[1].taskIds, newTaskRes.data?.createTask.id]
           const updatedCol = { 0: col[0], 1: { ...col[1], taskIds: newTaskIds } }
           return { ...updatedCol }
         } else {
@@ -245,6 +249,7 @@ const Home = () => {
         return errorMessage(err.message)
       })
     })
+
 
     const newTasks = Object.fromEntries(
       Object.entries(state.tasks).map((task: any) => {

@@ -5,9 +5,9 @@ import { BrowserRouter } from "react-router-dom";
 import Home from "../pages/Home";
 import { createColumnError, createColumnSuccess, deleteColumn, getAllColumns, updateColumnError, updateColumnSuccess, } from "../mock-graphql/column";
 import { getUser } from "../mock-graphql/auth";
-import { createTaskSuccess, getAllTasks } from '../mock-graphql/task'
+import { createTaskError, createTaskSuccess, getAllTasks, updateTaskSuccess } from '../mock-graphql/task'
 
-const mocks: any[] = [getUser, getAllColumns, getAllTasks, createColumnSuccess, createColumnError, updateColumnSuccess, updateColumnError, deleteColumn, createTaskSuccess];
+const mocks: any[] = [getUser, getAllColumns, getAllTasks, createColumnSuccess, createColumnError, updateColumnSuccess, updateColumnError, deleteColumn, createTaskSuccess, createTaskError, updateTaskSuccess];
 
 const setup = () => {
     render(
@@ -152,7 +152,7 @@ describe("home page", () => {
     })
 
     describe('task tests', () => {
-        it.only('should create a new task correctly', async () => {
+        it('should create a new task correctly', async () => {
             setup()
 
             // wait for getting initial values
@@ -172,9 +172,65 @@ describe("home page", () => {
             expect(await screen.findByText(newTask)).toBeInTheDocument()
         })
 
-        //it('should return error message,if the create task input is empty', async () => { })
+        it('should return error message,if the create task input is empty', async () => {
+            setup()
 
-        //it('should return error message,if there is a task with same name', async () => { })
+            // wait for getting initial values
+            expect(await screen.findByText(/Take out the garbage/i)).toBeInTheDocument()
+
+            // open create task modal
+            userEvent.click(await screen.findByText(/create task/i))
+            expect(screen.getByText(/Create a new task/i)).toBeInTheDocument()
+
+            // submit form
+            userEvent.click(screen.getByRole('button', { name: /submit/i }))
+            expect(await screen.findByText(/Please provide all inputs.../i)).toBeInTheDocument()
+
+
+        })
+
+        it('should return error message,if there is a task with same name', async () => {
+            setup()
+
+            // wait for getting initial values
+            expect(await screen.findByText(/Take out the garbage/i)).toBeInTheDocument()
+
+            // open create task modal
+            userEvent.click(await screen.findByText(/create task/i))
+            expect(screen.getByText(/Create a new task/i)).toBeInTheDocument()
+
+            // fill the form and submit
+            userEvent.type(screen.getByPlaceholderText(/Enter Task/i), "Take out the garbage")
+            userEvent.selectOptions(screen.getByPlaceholderText(/Choose Tag/), 'High')
+            userEvent.selectOptions(await screen.findByPlaceholderText(/Choose Column/), 'column-2')
+            userEvent.click(screen.getByRole('button', { name: /submit/i }))
+
+            expect(await screen.findByText(/There is a task with same content./i)).toBeInTheDocument()
+        })
+
+        it('should update the task correctly', async () => {
+            setup()
+
+            // wait for getting initial values
+            expect(await screen.findByText(/Take out the garbage/i)).toBeInTheDocument()
+
+            // open update form modal of first task in first column
+            const taskSettingBtns = screen.getAllByTestId("task-setting-icon")
+            userEvent.click(taskSettingBtns[0])
+            userEvent.click(screen.getByText('Update'))
+
+            // fill the form and submit
+            const updatedTaskContent = "Updated Task 44"
+            userEvent.clear(screen.getByPlaceholderText(/Enter Task/i))
+            userEvent.type(screen.getByPlaceholderText(/Enter Task/i), updatedTaskContent)
+            userEvent.selectOptions(screen.getByPlaceholderText(/Choose Tag/i), "High")
+            userEvent.click(screen.getByRole('button', { name: /submit/i }))
+            expect(await screen.findByText(updatedTaskContent)).toBeInTheDocument()
+        })
+
+        it.only('should return error message, if there is a task with same content,while updating', async () => { })
+
+        //it('should delete the task correctly', async () => { })
 
     })
 });

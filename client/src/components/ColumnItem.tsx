@@ -37,7 +37,7 @@ const ColumnItem: React.FC<IProps> = ({ task, innerRef, updateTheTask, deleteThe
                     placement="bottom"
                     trigger="click"
                 >
-                    <Button type="text">
+                    <Button data-testid='task-setting-icon' type="text">
                         <UpdateIcon color="black" />
                     </Button>
                 </Popover>
