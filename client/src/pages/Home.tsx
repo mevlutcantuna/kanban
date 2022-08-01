@@ -369,7 +369,6 @@ const Home = () => {
           [newColumn.id]: newColumn,
         },
       };
-
       setState(newState);
 
       // update the DB
@@ -384,6 +383,7 @@ const Home = () => {
           return errorMessage(err.message)
         }
       })
+
       return;
     }
 

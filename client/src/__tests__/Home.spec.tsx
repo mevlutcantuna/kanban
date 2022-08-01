@@ -1,22 +1,33 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { render, screen, waitFor, waitForElementToBeRemoved } from "@testing-library/react";
+import { render, screen, waitForElementToBeRemoved } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
 import Home from "../pages/Home";
 import { createColumnError, createColumnSuccess, deleteColumn, getAllColumns, updateColumnError, updateColumnSuccess, } from "../mock-graphql/column";
 import { getUser } from "../mock-graphql/auth";
 import { createTaskError, createTaskSuccess, deleteTask, getAllTasks, updateTaskError, updateTaskSuccess } from '../mock-graphql/task'
+import {
+    mockGetComputedStyle,
+    mockDndSpacing,
+    makeDnd,
+    DND_DIRECTION_UP,
+    DND_DIRECTION_DOWN,
+} from 'react-beautiful-dnd-test-utils';
+import { updateColumnSuccessDND } from "../mock-graphql/dnd";
 
-const mocks: any[] = [getUser, getAllColumns, getAllTasks, createColumnSuccess, createColumnError, updateColumnSuccess, updateColumnError, deleteColumn, createTaskSuccess, createTaskError, updateTaskSuccess, updateTaskError, deleteTask];
+
+const mocks: any[] = [getUser, getAllColumns, getAllTasks, createColumnSuccess, createColumnError, updateColumnSuccess, updateColumnError, deleteColumn, createTaskSuccess, createTaskError, updateTaskSuccess, updateTaskError, deleteTask, updateColumnSuccessDND];
 
 const setup = () => {
-    render(
+    const { container } = render(
         <MockedProvider mocks={mocks} addTypename={false}>
             <BrowserRouter>
                 <Home />
             </BrowserRouter>
         </MockedProvider>
     );
+
+    mockDndSpacing(container)
 };
 
 describe("home page", () => {
@@ -249,7 +260,7 @@ describe("home page", () => {
 
         })
 
-        it.only('should delete the task correctly', async () => {
+        it('should delete the task correctly', async () => {
             setup()
 
             // wait for getting initial values
@@ -262,8 +273,45 @@ describe("home page", () => {
 
             await waitForElementToBeRemoved(() => screen.queryByText('Take out the garbage'))
             expect(await screen.findByText(/deleted the task/i)).toBeInTheDocument()
-            screen.debug(undefined, Infinity)
         })
 
     })
+
+    describe('dnd', () => {
+
+        beforeEach(() => {
+            mockGetComputedStyle();
+        });
+
+        it('should move a task up inside a column', async () => {
+            setup()
+
+            expect(await screen.findAllByTestId('task-item')).toHaveLength(2)
+            expect((await screen.findAllByTestId('task-item'))[0]).toHaveTextContent('Take out the garbage')
+
+            await makeDnd({
+                text: 'Watch my favorite show',
+                direction: DND_DIRECTION_UP,
+                positions: 1
+            });
+
+            expect((await screen.findAllByTestId('task-item'))[1]).toHaveTextContent('Take out the garbage')
+        })
+
+        it('should move a task down inside a column', async () => {
+            setup()
+
+            expect(await screen.findAllByTestId('task-item')).toHaveLength(2)
+            expect((await screen.findAllByTestId('task-item'))[0]).toHaveTextContent('Take out the garbage')
+
+            await makeDnd({
+                text: 'Take out the garbage',
+                direction: DND_DIRECTION_DOWN,
+                positions: 1
+            });
+
+            expect((await screen.findAllByTestId('task-item'))[1]).toHaveTextContent('Take out the garbage')
+        })
+    })
+
 });

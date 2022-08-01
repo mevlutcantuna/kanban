@@ -24,7 +24,7 @@ const ColumnItem: React.FC<IProps> = ({ task, innerRef, updateTheTask, deleteThe
     };
 
     return (
-        <div ref={innerRef} {...props} className="mb-3 bg-gray-300 p-2 rounded-sm">
+        <div data-testid='task-item' ref={innerRef} {...props} className="mb-3 bg-gray-300 p-2 rounded-sm">
             <div className="mb-2 text-base">{task.content}</div>
             <div className="flex items-center justify-between">
                 <span className="text-xs px-2 py-1 rounded-md bg-gray-700 text-white">
