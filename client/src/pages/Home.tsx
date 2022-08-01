@@ -250,7 +250,6 @@ const Home = () => {
       })
     })
 
-
     const newTasks = Object.fromEntries(
       Object.entries(state.tasks).map((task: any) => {
         if (task[0] === res.data?.updateTask?.id) {

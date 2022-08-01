@@ -5,9 +5,9 @@ import { BrowserRouter } from "react-router-dom";
 import Home from "../pages/Home";
 import { createColumnError, createColumnSuccess, deleteColumn, getAllColumns, updateColumnError, updateColumnSuccess, } from "../mock-graphql/column";
 import { getUser } from "../mock-graphql/auth";
-import { createTaskError, createTaskSuccess, getAllTasks, updateTaskSuccess } from '../mock-graphql/task'
+import { createTaskError, createTaskSuccess, getAllTasks, updateTaskError, updateTaskSuccess } from '../mock-graphql/task'
 
-const mocks: any[] = [getUser, getAllColumns, getAllTasks, createColumnSuccess, createColumnError, updateColumnSuccess, updateColumnError, deleteColumn, createTaskSuccess, createTaskError, updateTaskSuccess];
+const mocks: any[] = [getUser, getAllColumns, getAllTasks, createColumnSuccess, createColumnError, updateColumnSuccess, updateColumnError, deleteColumn, createTaskSuccess, createTaskError, updateTaskSuccess, updateTaskError];
 
 const setup = () => {
     render(
@@ -228,9 +228,28 @@ describe("home page", () => {
             expect(await screen.findByText(updatedTaskContent)).toBeInTheDocument()
         })
 
-        it.only('should return error message, if there is a task with same content,while updating', async () => { })
+        it('should return error message, if there is a task with same content,while updating', async () => {
+            setup()
 
-        //it('should delete the task correctly', async () => { })
+            // wait for getting initial values
+            expect(await screen.findByText(/Take out the garbage/i)).toBeInTheDocument()
+
+            // open update form modal of first task in first column
+            const taskSettingBtns = screen.getAllByTestId("task-setting-icon")
+            userEvent.click(taskSettingBtns[0])
+            userEvent.click(screen.getByText('Update'))
+
+            // fill the form and submit
+            userEvent.clear(screen.getByPlaceholderText(/Enter Task/i))
+            userEvent.type(screen.getByPlaceholderText(/Enter Task/i), "Watch my favorite show")
+            userEvent.selectOptions(screen.getByPlaceholderText(/Choose Tag/i), "High")
+            userEvent.click(screen.getByRole('button', { name: /submit/i }))
+
+            expect(await screen.findByText("There is a task with same content.")).toBeInTheDocument()
+
+        })
+
+        it.only('should delete the task correctly', async () => { })
 
     })
 });

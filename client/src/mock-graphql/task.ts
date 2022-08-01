@@ -92,3 +92,17 @@ export const updateTaskSuccess = {
     },
   },
 };
+
+export const updateTaskError = {
+  request: {
+    query: UPDATE_TASK,
+    variables: {
+      task: {
+        content: "Watch my favorite show",
+        tag: "High",
+        id: "1",
+      },
+    },
+  },
+  error: new Error("There is a task with same content."),
+};
