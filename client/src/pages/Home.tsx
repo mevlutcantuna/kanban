@@ -288,17 +288,16 @@ const Home = () => {
         return errorMessage(err.message)
       }
     })
-
     // create new taks ids for dependent column
     const deletedTask: ITask = deletedTaskRes.data.deleteTask
     //@ts-ignore
-    const newTaskIds = state?.columns[deletedTask.columnId]["taskIds"].filter((id: string) => id !== deletedTask.id)
+    const newTaskIds = state.columns[deletedTask.columnId]["taskIds"].filter((id: string) => id !== deletedTask.id)
 
     // update the dependent column
     await updateCol({
       variables: {
         column: {
-          id: deletedTaskRes.data.deleteTask.columnId,
+          id: deletedTaskRes.data?.deleteTask.columnId,
           taskIds: newTaskIds
         }
       },

@@ -1,13 +1,13 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { render, screen, waitForElementToBeRemoved } from "@testing-library/react";
+import { render, screen, waitFor, waitForElementToBeRemoved } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
 import Home from "../pages/Home";
 import { createColumnError, createColumnSuccess, deleteColumn, getAllColumns, updateColumnError, updateColumnSuccess, } from "../mock-graphql/column";
 import { getUser } from "../mock-graphql/auth";
-import { createTaskError, createTaskSuccess, getAllTasks, updateTaskError, updateTaskSuccess } from '../mock-graphql/task'
+import { createTaskError, createTaskSuccess, deleteTask, getAllTasks, updateTaskError, updateTaskSuccess } from '../mock-graphql/task'
 
-const mocks: any[] = [getUser, getAllColumns, getAllTasks, createColumnSuccess, createColumnError, updateColumnSuccess, updateColumnError, deleteColumn, createTaskSuccess, createTaskError, updateTaskSuccess, updateTaskError];
+const mocks: any[] = [getUser, getAllColumns, getAllTasks, createColumnSuccess, createColumnError, updateColumnSuccess, updateColumnError, deleteColumn, createTaskSuccess, createTaskError, updateTaskSuccess, updateTaskError, deleteTask];
 
 const setup = () => {
     render(
@@ -249,7 +249,21 @@ describe("home page", () => {
 
         })
 
-        it.only('should delete the task correctly', async () => { })
+        it.only('should delete the task correctly', async () => {
+            setup()
+
+            // wait for getting initial values
+            expect(await screen.findByText(/Take out the garbage/i)).toBeInTheDocument()
+
+            // open popover of the task and delete it
+            const taskSettingBtns = screen.getAllByTestId("task-setting-icon")
+            userEvent.click(taskSettingBtns[0])
+            userEvent.click(screen.getByText('Delete'))
+
+            await waitForElementToBeRemoved(() => screen.queryByText('Take out the garbage'))
+            expect(await screen.findByText(/deleted the task/i)).toBeInTheDocument()
+            screen.debug(undefined, Infinity)
+        })
 
     })
 });

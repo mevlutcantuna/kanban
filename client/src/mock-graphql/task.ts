@@ -1,4 +1,9 @@
-import { CREATE_TASK, GET_ALL_TASKS, UPDATE_TASK } from "../graphql/task";
+import {
+  CREATE_TASK,
+  DELETE_TASK,
+  GET_ALL_TASKS,
+  UPDATE_TASK,
+} from "../graphql/task";
 
 export const getAllTasks = {
   request: {
@@ -105,4 +110,24 @@ export const updateTaskError = {
     },
   },
   error: new Error("There is a task with same content."),
+};
+
+export const deleteTask = {
+  request: {
+    query: DELETE_TASK,
+    variables: {
+      deleteTaskId: "1",
+    },
+  },
+  result: {
+    data: {
+      deleteTask: {
+        id: "1",
+        columnId: "column-1",
+        user: "1",
+        content: "Take out the garbage",
+        tag: "Medium",
+      },
+    },
+  },
 };
