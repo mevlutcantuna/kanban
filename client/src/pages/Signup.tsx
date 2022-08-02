@@ -5,6 +5,7 @@ import { REGISTER } from "../graphql/auth";
 import { errorMessage, isAuthanticated, successMessage } from "../lib/utils";
 import { Spin } from "antd";
 
+
 const Signup = () => {
   const [inputs, setInputs] = useState<any>({ fullName: "", email: "", password: "" })
   const navigate = useNavigate()
