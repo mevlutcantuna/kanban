@@ -28,7 +28,7 @@ const Signup = () => {
     }
 
     // register
-    await register({
+    const res = await register({
       variables: {
         "user": {
           "fullName": inputs.fullName,
@@ -38,9 +38,11 @@ const Signup = () => {
       }
     })
 
-    // return success message
-    successMessage('Register is successed...')
-    return navigate('/login')
+    if (res.data) {
+      // return success message
+      successMessage('Register is successed...')
+      return navigate('/login')
+    }
   }
 
   useEffect(() => {
