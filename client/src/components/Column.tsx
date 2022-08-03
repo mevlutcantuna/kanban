@@ -52,7 +52,7 @@ const Column: React.FC<IProps> = ({ column, tasks, deleteTheCol, updateColumnNam
                                 {...provided.droppableProps}
                             >
                                 {tasks?.map((task: any, index: number) => (
-                                    <Draggable draggableId={task.id} key={task.id} index={index}>
+                                    <Draggable draggableId={task?.id} key={task?.id} index={index}>
                                         {(provided) => {
                                             return (
                                                 <ColumnItem
@@ -61,7 +61,7 @@ const Column: React.FC<IProps> = ({ column, tasks, deleteTheCol, updateColumnNam
                                                     innerRef={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
-                                                    key={task.id}
+                                                    key={task?.id}
                                                     task={task}
                                                 />
                                             );
