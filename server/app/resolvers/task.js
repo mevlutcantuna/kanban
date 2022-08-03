@@ -50,7 +50,7 @@ module.exports = {
         content: others.content,
         user: task.user,
       });
-      if (isTaskExisted)
+      if (isTaskExisted && isTaskExisted.id !== id)
         throw new ApolloError("There is a task with same content");
 
       // update task

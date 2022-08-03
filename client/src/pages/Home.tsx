@@ -499,7 +499,7 @@ const Home = () => {
     <>
       <Spin data-testid="loading" spinning={allColQuery.loading || allTaskQuery.loading || loading}>
         {data &&
-          <div className="w-screen h-screen bg-lightBlack">
+          <div className="w-screen h-full min-h-screen bg-lightBlack">
             <div>
               <Header user={data.getUser} />
               <div className="flex justify-end w-full max-w-[1000px] m-auto mt-8 px-2">

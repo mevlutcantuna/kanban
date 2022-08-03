@@ -49,7 +49,7 @@ const Login = () => {
 
   return (
     <Spin spinning={loading}>
-      <div className="w-screen h-screen pt-40 flex justify-center bg-lightBlack">
+      <div className="w-screen h-screen pt-40 px-4 flex justify-center bg-lightBlack">
         <div className="w-full max-w-sm h-80 flex flex-col items-center">
           <h1 data-testid='header' className="text-gray-300 text-3xl">Log In</h1>
           <form onSubmit={submit} className="w-full flex flex-col mt-10">
