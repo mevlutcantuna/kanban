@@ -1,6 +1,6 @@
 ## KANBAN PROJECT
 
-Client Deploy : https://kanban-graphql-server-mct.netlify.app/
+Client Deploy : https://kanban-project-mct.netlify.app
 
 Server Deploy : https://kanban-graphql-server.herokuapp.com/graphql
 
