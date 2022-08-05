@@ -1,3 +1,4 @@
+import { Spin } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import React, { memo, useState } from "react";
 import { useEffect } from "react";
@@ -30,6 +31,7 @@ const ItemModal: React.FC<IProps> = ({
     const [content, setContent] = useState("");
     const [tag, setTag] = useState<string>("");
     const [column, setColumn] = useState<string>("")
+    const [loading, setLoading] = useState<boolean>(false)
 
     const handleContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setContent(e.target.value)
@@ -48,6 +50,8 @@ const ItemModal: React.FC<IProps> = ({
             return errorMessage('Please provide all inputs...')
         }
 
+        setLoading(true)
+
         if (title === 'Create a new task') {
             if (column === "") {
                 return errorMessage('Please provide all inputs...')
@@ -57,14 +61,16 @@ const ItemModal: React.FC<IProps> = ({
                 setContent("")
                 setTag("")
                 setColumn("")
+                setLoading(false)
                 return onCancel()
-            }
+            } else return setLoading(false)
 
         } else {
             const res = await updateTheTask?.(content, tag, task?.id as string)
             if (res) {
+                setLoading(false)
                 return onCancel()
-            }
+            } else return setLoading(false)
         }
 
     }
@@ -110,7 +116,10 @@ const ItemModal: React.FC<IProps> = ({
                 </select>
             }
             <div className="flex justify-end">
-                <button onClick={click} className="bg-lightBlack px-4 py-2 rounded-sm text-gray-50 mt-4" >Submit</button>
+                <button disabled={loading} onClick={click} className="flex items-center justify-center bg-lightBlack px-4 py-2 rounded-sm text-gray-50 mt-4 disabled:bg-slate-500 disabled:text-gray-800" >
+                    Submit
+                    {loading && <div className="ml-4  flex items-center justify-center"><Spin size="small" /></div>}
+                </button>
             </div>
         </Modal>
     );

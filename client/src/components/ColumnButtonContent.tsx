@@ -1,3 +1,4 @@
+import { Spin } from 'antd'
 import React, { useState } from 'react'
 import DeleteIcon from '../assets/DeleteIcon'
 import UpdateIconSM from '../assets/UpdateIconSM'
@@ -13,6 +14,7 @@ type IProps = {
 
 const ColumnButtonContent: React.FC<IProps> = ({ hide, deleteButton, column, updateButton }) => {
     const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false)
 
     const showModal = () => {
         hide()
@@ -27,16 +29,19 @@ const ColumnButtonContent: React.FC<IProps> = ({ hide, deleteButton, column, upd
         setIsModalVisible(false);
     };
 
-    const clickDelete = () => {
-        deleteButton(column.id as string)
+    const clickDelete = async () => {
+        setLoading(true)
+        await deleteButton(column.id as string)
         setIsModalVisible(false)
+        setLoading(false)
     }
 
     return (
         <div className='flex flex-col items-start'>
-            <button onClick={clickDelete} className='w-full flex items-center justify-center py-1 px-3 mb-1 rounded bg-gray-400'>
+            <button disabled={loading} onClick={clickDelete} className='w-full flex items-center justify-center py-1 px-3 mb-1 rounded bg-gray-400 disabled:bg-slate-500 disabled:text-gray-800'>
                 <DeleteIcon color='black' />
                 <span className='ml-1'>Delete</span>
+                {loading && <div className="ml-4 flex items-center justify-center"><Spin size="small" /></div>}
             </button>
             <button onClick={showModal} className='w-full flex items-center justify-center py-1 px-3 mb-1 rounded bg-gray-400'>
                 <UpdateIconSM color='black' />

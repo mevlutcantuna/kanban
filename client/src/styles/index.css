@@ -9,3 +9,7 @@
 .ant-spin-nested-loading {
   @apply bg-black;
 }
+
+.ant-spin {
+  @apply !flex;
+}
